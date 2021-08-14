@@ -1,12 +1,16 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.plaf.DimensionUIResource;
 // import javax.swing.ImageIcon;
+//
 import java.awt.Color;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+// import java.awt.FlowLayout;
 import java.awt.GridLayout;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Memorama extends JFrame{
 
@@ -20,8 +24,20 @@ public class Memorama extends JFrame{
 	private static JPanel juego;
 	private static JPanel opciones;
 
+	public static String imgDir = "../media/img/";
+	private static File tarjetas = new File(imgDir);
+		// Escoger tarjetas
+	private static LinkedList<String> 
+ 		fTarjetas = new LinkedList<String>( 
+				Arrays.asList( 
+					tarjetas.list()));
+
+	public static void main(String[] args){
+		new Memorama().setVisible(true);;
+	}
+
 	public Memorama(){
-		initComponents(3);
+		initComponents(2);
 	}
 
 	public Memorama(int lvl){
@@ -32,9 +48,10 @@ public class Memorama extends JFrame{
 	private void initComponents(int lvl){
 		// Pantalla principal
 		initFrame();
-		// init tarjetas
-		initPanels(lvl);
-
+		// Inicia Juego
+		initGame(lvl);
+		// Inicia Panel secundario
+		initOptions();
 	}
 
 	private void initFrame(){
@@ -52,30 +69,52 @@ public class Memorama extends JFrame{
 		this.setLayout(new BorderLayout(10,0));
 	}
 
-	private void initPanels(int lvl){
-		
-		int fLvl = lvl+1;
+	private void initOptions(){
+		// Panel al lado
+		opciones = new JPanel();
+		opciones.setPreferredSize(new DimensionUIResource(winSize*5,100));
+		opciones.setBackground(cMain);
+		this.add(opciones, BorderLayout.EAST);
+	}
 
+	private void initGame(int lvl){
+		int fLvl = lvl+1;
 		// Panel de las tarejatas
 		juego = new JPanel();
 		juego.setBackground(cBase);
 	 	juego.setLayout(new GridLayout(fLvl==5?4:fLvl,fLvl,10,10));
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
 
+		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
+		String tarjeta;	
+		LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
 		// Agrgar Tarjetas
-		 for(int i=0; i<(Math.pow(2,fLvl));i++){
+		for(int i=0; i<(Math.pow(2,fLvl));i++){
 			// Agrega el numero de cartas segun la dificultad
-			juego.add(new Tarjeta("Pregunta"));
-			juego.add(new Tarjeta("Respuesta"));
-		 }
+			tarjeta = getTarjeta(); 
+
+			Seleccion.add(new Tarjeta(i,false,tarjeta));
+			Seleccion.add(new Tarjeta(i,true,tarjeta));
+		}
+
+		// Randomiza el orden de las tarjetas
+		int randSelection;
+		for(int i=0; i<Seleccion.size(); i++){
+			randSelection = (int)(Math.random() * (double) Seleccion.size());
+			juego.add(Seleccion.get(randSelection));
+			Seleccion.remove(randSelection);
+		}
+
 
 		this.add(juego, BorderLayout.CENTER); 
-		
-		// Panel al lado
-		opciones = new JPanel();
-		opciones.setPreferredSize(new DimensionUIResource(winSize*5,100));
-		opciones.setBackground(cMain);
-		this.add(opciones, BorderLayout.EAST);
+	}
+
+	private static String getTarjeta(){
+		String tarjeta=imgDir;
+		int randSelection = (int)(Math.random() * (double)fTarjetas.size());
+		tarjeta += fTarjetas.get(randSelection);
+		fTarjetas.remove(randSelection);
+		return tarjeta;
 	}
 
 }
