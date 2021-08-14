@@ -2,25 +2,51 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Main{
+public class Main implements ActionListener{
+
+	public static boolean DEBUG = false;
 
 	private static JFrame frame;
 	private static JLayeredPane base;
 	private static JButton startB;
+	private static int selectedLevel = 1;
 
 	private static Color cBase = 		new Color(0x0C1E42);
+
+	public static void main(String args[]){
+		if(args.length != 0) DEBUG = true;
+		new Main();
+		frame.setVisible(true);
+	}
+
+
 	// Pantalla principal
-	Main (){
+	public Main (){
+		// Inicia la ventana
+		setFrame();
+		// Inicia el layout para la ventana
+		initBase();
+		// Add title
+		initTitle();
+		// Dificultad
+		this.initLevel();
+		// Botton de inicio
+		this.initSButton();
 
-		//----------------------------------------------Frame
+	}
+
+	private static void setFrame(){
 		frame = new JFrame();
-
 		// técnico 
 		frame.setTitle("Memorama"); //Nombre de la ventana
 		frame.setResizable(false); // tamaño fijo
@@ -35,47 +61,81 @@ public class Main{
 		// frame.setLayout(new BorderLayout(10,0));
 		frame.setLayout(null);
 		
+	}
 
-		//-------------------------------------------Panel general
+	private static void initBase(){
 		// layered
 		base = new JLayeredPane();
 		base.setBackground(cBase);
 		// base.setLayout(new BorderLayout(10,0));
-
 		frame.add(base);
-		// --------------------------------
-		// Name
+	}
+
+	private static void initTitle(){
+		// Subtitle 
+		JLabel AL = new JLabel("Algebra Lineal");
+		AL.setFont(new Font("Arial", Font.PLAIN,20));
+		AL.setForeground(Color.WHITE);
+		AL.setHorizontalAlignment(JLabel.CENTER);
+		AL.setBounds(100, 30, 300, 20);
+		frame.add(AL);
+		// Inicia el titulo principal
 		ImageIcon tIcon = new ImageIcon("../media/icons/title.png");
 		// JLabel title = new JLabel("Algebra", JLabel.CENTER);
 		JLabel title = new JLabel();
-		title.setText("Algerba Lineal\n Memorama:");
+		title.setText("Memorama");
 		title.setHorizontalTextPosition(JLabel.CENTER);
 		title.setVerticalTextPosition(JLabel.TOP);
-		title.setFont(new Font("Arial",Font.BOLD,26));
-		title.setForeground(Color.BLACK);
+		title.setFont(new Font("Arial",Font.BOLD,40));
+		title.setForeground(Color.WHITE);
 		title.setIconTextGap(50);
 		title.setIcon(tIcon);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setBounds(50, 50, 400, 300);
 		frame.add(title);
-		
+	}
+
+	private void initLevel(){
+		// Selector de dificultad
+		String[] niveles = {"fácil", "Medio", "Dificl"};
+		JComboBox<String> lvlSelector = new JComboBox<String>(niveles);
+		lvlSelector.setSelectedItem(0);
+		lvlSelector.addActionListener(this);
+		lvlSelector.setActionCommand("Level");
+		lvlSelector.setBounds(190, 350,120,20);
+		frame.add(lvlSelector);
+	}
+
+	private void initSButton(){
 		// Buton de inicion
 		startB = new JButton("Inicio");
 		startB.setBounds(200, 400, 100, 50);
-	
+		startB.addActionListener(this);
+		startB.setActionCommand("Start");
 		frame.add(startB);
-
-		// Falta agregar el selector de dificultad
-
 	}
 
-	public static void main(String Args[]){
-		new Main();
-		frame.setVisible(true);
-		new Memorama(1).setVisible(true);
-		new Memorama(2).setVisible(true);
-		new Memorama(3).setVisible(true);
+	private static void startMemorama(int lvl){
+		// Inicia el Juego
+		new Memorama(lvl).setVisible(true);
+		frame.setVisible(false);
+		frame.dispose();
+	}
 
+	public void actionPerformed(ActionEvent event){
+		String cmd = event.getActionCommand();
+		if(DEBUG) System.out.println(cmd);
+		switch(cmd){
+			case "Start":
+				startMemorama(selectedLevel);
+				break;
+			case "Level":
+				@SuppressWarnings(value="unchecked") // Decirle al compilador que no mame
+				// Solo porque estamos seguros de que es este tipo de cast par ael Obj
+				JComboBox<String> lvl = (JComboBox<String>)event.getSource();
+				selectedLevel = lvl.getSelectedIndex() +1;
+				break;
+		}
 	}
 
 }
