@@ -1,18 +1,25 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
+import javax.swing.Action;
 // import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 //
+import java.awt.EventQueue;
 import java.awt.Color;
 import java.awt.BorderLayout;
 // import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
-public class Memorama extends JFrame{
+public class Memorama extends JFrame implements ActionListener{
 
 	private static Color cBase = 		new Color(0x0C1E42);
 	private static Color cMain = 		new Color(0x0B378F);
@@ -31,27 +38,40 @@ public class Memorama extends JFrame{
  		fTarjetas = new LinkedList<String>( 
 				Arrays.asList( 
 					tarjetas.list()));
+	// global vars for comparation
+	private static boolean pressed = false;
+	private static Tarjeta selected,preSelected;
 
 	public static void main(String[] args){
 		new Memorama().setVisible(true);;
 	}
 
 	public Memorama(){
-		initComponents(2);
+		this(1);
 	}
 
 	public Memorama(int lvl){
-		// Init COmponenets
-		initComponents(lvl);
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+					ex.printStackTrace();
+				}
+				// Init COmponenets
+				initComponents(lvl);
+			}
+		});
 	}
 
 	private void initComponents(int lvl){
 		// Pantalla principal
 		initFrame();
-		// Inicia Juego
-		initGame(lvl);
 		// Inicia Panel secundario
 		initOptions();
+		// Inicia Juego
+		initGame(lvl);
 	}
 
 	private void initFrame(){
@@ -79,6 +99,7 @@ public class Memorama extends JFrame{
 
 	private void initGame(int lvl){
 		int fLvl = lvl+1;
+		int nPairs = (int)Math.pow(2,fLvl);
 		// Panel de las tarejatas
 		juego = new JPanel();
 		juego.setBackground(cBase);
@@ -86,30 +107,31 @@ public class Memorama extends JFrame{
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
 
 		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
-		String tarjeta;	
+		String img;	
 		LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
 		// Agrgar Tarjetas
-		for(int i=0; i<(Math.pow(2,fLvl));i++){
+		for(int i=0; i<nPairs;i++){
 			// Agrega el numero de cartas segun la dificultad
-			tarjeta = getTarjeta(); 
-
-			Seleccion.add(new Tarjeta(i,false,tarjeta));
-			Seleccion.add(new Tarjeta(i,true,tarjeta));
+			img = getTarjetaImg(); 
+			// res
+			Seleccion.add(makeTarjeta(i,false,img));
+			// answer
+			Seleccion.add(makeTarjeta(i,true,img));
 		}
 
 		// Randomiza el orden de las tarjetas
 		int randSelection;
-		for(int i=0; i<Seleccion.size(); i++){
+		for(int i=0; i<nPairs*2; i++){
 			randSelection = (int)(Math.random() * (double) Seleccion.size());
 			juego.add(Seleccion.get(randSelection));
 			Seleccion.remove(randSelection);
 		}
 
-
+		// Agregar Panel de jeugo a la ventana
 		this.add(juego, BorderLayout.CENTER); 
 	}
 
-	private static String getTarjeta(){
+	private static String getTarjetaImg(){
 		String tarjeta=imgDir;
 		int randSelection = (int)(Math.random() * (double)fTarjetas.size());
 		tarjeta += fTarjetas.get(randSelection);
@@ -117,4 +139,42 @@ public class Memorama extends JFrame{
 		return tarjeta;
 	}
 
+	private Tarjeta makeTarjeta(int id, boolean isAns, String img ){
+		Tarjeta tj = new Tarjeta(id,isAns,img);
+		tj.addActionListener(this);
+		// tj.setActionCommand("Memoria");
+		return tj;
+
+	}
+
+	public void actionPerformed(ActionEvent event){
+		int waitTime = 300;
+		if(pressed){
+			//invertimos el estado presionado
+			pressed = false;
+			selected =  (Tarjeta)event.getSource();
+			if(!selected.equals(preSelected) && selected.id == preSelected.id){
+				wait(waitTime);
+				preSelected.setEnabled(false);
+				selected.setEnabled(false);
+			}else if(!selected.equals(preSelected)){
+				wait(waitTime*2);
+				selected.setSelected(false);
+				preSelected.setSelected(false);
+			}
+		}else{
+			pressed = true;
+			preSelected = (Tarjeta)event.getSource();
+
+		}
+	}
+
+	public static void wait(int ms) {
+			try {
+					Thread.sleep(ms);
+			} catch(InterruptedException ex) {
+					Thread.currentThread().interrupt();
+			}
+	}
+		
 }
