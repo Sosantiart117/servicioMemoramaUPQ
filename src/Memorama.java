@@ -31,12 +31,13 @@ public class Memorama extends JFrame implements ActionListener{
 	private static JPanel opciones;
 
 	public static String imgDir = "../media/img/";
-	private static File tarjetas = new File(imgDir);
-		// Escoger tarjetas
+	// Escoger tarjetas
+	// dir preg sirve como master para sacar imagenes
+	// y se espera encontrar lo mismo en res...
 	private static LinkedList<String> 
  		fTarjetas = new LinkedList<String>( 
 				Arrays.asList( 
-					tarjetas.list()));
+					new File(imgDir+"preg/").list()));
 	// global vars for comparation
 	private static boolean pressed = false;
 	private static Tarjeta selected,preSelected;
@@ -124,9 +125,9 @@ public class Memorama extends JFrame implements ActionListener{
 			// Agrega el numero de cartas segun la dificultad
 			img = getTarjetaImg(); 
 			// res
-			Seleccion.add(makeTarjeta(i,false,img));
+			Seleccion.add(makeTarjeta(i,false,imgDir+"preg/"+img));
 			// answer
-			Seleccion.add(makeTarjeta(i,true,img));
+			Seleccion.add(makeTarjeta(i,true,imgDir+"res/"+img));
 		}
 
 		// Randomiza el orden de las tarjetas
@@ -142,9 +143,8 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private static String getTarjetaImg(){
-		String tarjeta=imgDir;
 		int randSelection = (int)(Math.random() * (double)fTarjetas.size());
-		tarjeta += fTarjetas.get(randSelection);
+		String tarjeta = fTarjetas.get(randSelection);
 		fTarjetas.remove(randSelection);
 		return tarjeta;
 	}
