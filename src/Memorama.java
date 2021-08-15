@@ -1,11 +1,11 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
-import javax.swing.Action;
+// import javax.swing.Action;
 // import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-//
+
 import java.awt.EventQueue;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 public class Memorama extends JFrame implements ActionListener{
 
@@ -41,6 +40,13 @@ public class Memorama extends JFrame implements ActionListener{
 	// global vars for comparation
 	private static boolean pressed = false;
 	private static Tarjeta selected,preSelected;
+
+	// global for win state / game state
+	public static boolean running = false;
+	public static int score=0;
+	private static int nPairs;
+	private static int cuenta;
+	private static int level;
 
 	public static void main(String[] args){
 		new Memorama().setVisible(true);;
@@ -71,7 +77,10 @@ public class Memorama extends JFrame implements ActionListener{
 		// Inicia Panel secundario
 		initOptions();
 		// Inicia Juego
+		level=lvl;
 		initGame(lvl);
+		// toRun
+		running=true;
 	}
 
 	private void initFrame(){
@@ -99,7 +108,8 @@ public class Memorama extends JFrame implements ActionListener{
 
 	private void initGame(int lvl){
 		int fLvl = lvl+1;
-		int nPairs = (int)Math.pow(2,fLvl);
+		nPairs = (int)Math.pow(2,fLvl);
+		cuenta = 0;
 		// Panel de las tarejatas
 		juego = new JPanel();
 		juego.setBackground(cBase);
@@ -147,8 +157,15 @@ public class Memorama extends JFrame implements ActionListener{
 
 	}
 
+	public void restart(){
+		System.out.println("Restart Game");
+		new Memorama(level).setVisible(true);;
+		this.dispose();
+	}
+
 	public void actionPerformed(ActionEvent event){
 		int waitTime = 300;
+		// checar pares
 		if(pressed){
 			//invertimos el estado presionado
 			pressed = false;
@@ -157,6 +174,7 @@ public class Memorama extends JFrame implements ActionListener{
 				wait(waitTime);
 				preSelected.setEnabled(false);
 				selected.setEnabled(false);
+				cuenta++;
 			}else if(!selected.equals(preSelected)){
 				wait(waitTime*2);
 				selected.setSelected(false);
@@ -165,8 +183,12 @@ public class Memorama extends JFrame implements ActionListener{
 		}else{
 			pressed = true;
 			preSelected = (Tarjeta)event.getSource();
-
 		}
+		// gano ? 
+		if(cuenta == nPairs){
+			restart();
+		}
+		
 	}
 
 	public static void wait(int ms) {
