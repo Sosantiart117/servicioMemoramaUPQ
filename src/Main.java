@@ -2,11 +2,11 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.Action;
+// import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
-import java.awt.BorderLayout;
+// import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,6 +20,7 @@ public class Main implements ActionListener{
 	private static JLayeredPane base;
 	private static JButton startB;
 	private static int selectedLevel = 1;
+	private static JComboBox<String> lvlSelector ;
 
 	private static Color cBase = 		new Color(0x0C1E42);
 
@@ -98,10 +99,8 @@ public class Main implements ActionListener{
 	private void initLevel(){
 		// Selector de dificultad
 		String[] niveles = {"fácil", "Medio", "Dificl"};
-		JComboBox<String> lvlSelector = new JComboBox<String>(niveles);
+	 	lvlSelector = new JComboBox<String>(niveles);
 		lvlSelector.setSelectedItem(0);
-		lvlSelector.addActionListener(this);
-		lvlSelector.setActionCommand("Level");
 		lvlSelector.setBounds(190, 350,120,20);
 		frame.add(lvlSelector);
 	}
@@ -123,18 +122,10 @@ public class Main implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent event){
-		String cmd = event.getActionCommand();
-		if(DEBUG) System.out.println(cmd);
-		switch(cmd){
-			case "Start":
-				startMemorama(selectedLevel);
-				break;
-			case "Level":
-				@SuppressWarnings(value="unchecked") // Decirle al compilador que no mame
-				// Solo porque estamos seguros de que es este tipo de cast par ael Obj
-				JComboBox<String> lvl = (JComboBox<String>)event.getSource();
-				selectedLevel = lvl.getSelectedIndex() +1;
-				break;
+		// If button selected
+		if(event.getSource() == startB){
+			selectedLevel = lvlSelector.getSelectedIndex() +1; // get lvl
+			startMemorama(selectedLevel);// start game
 		}
 	}
 

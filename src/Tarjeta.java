@@ -24,12 +24,11 @@ public class Tarjeta extends JToggleButton{
 	private BufferedImage card;
 
 	public Tarjeta(int id, boolean ans, String bg){
-
-		// this.setModel(new StickyModel());
-
 		this.setBorder(null);
 		this.setBackground(null);
+		this.setFocusable(false);
 
+		// custom properties
 		this.isAnswer = ans;
 		this.id = id;
 

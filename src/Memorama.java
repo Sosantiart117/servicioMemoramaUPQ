@@ -34,10 +34,7 @@ public class Memorama extends JFrame implements ActionListener{
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
 	// y se espera encontrar lo mismo en res...
-	private static LinkedList<String> 
- 		fTarjetas = new LinkedList<String>( 
-				Arrays.asList( 
-					new File(imgDir+"preg/").list()));
+	private static LinkedList<String> fTarjetas;
 	// global vars for comparation
 	private static boolean pressed = false;
 	private static Tarjeta selected,preSelected;
@@ -64,7 +61,8 @@ public class Memorama extends JFrame implements ActionListener{
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-					ex.printStackTrace();
+					System.err.println("Error al cargar");
+					// ex.printStackTrace();
 				}
 				// Init COmponenets
 				initComponents(lvl);
@@ -118,6 +116,10 @@ public class Memorama extends JFrame implements ActionListener{
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
 
 		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
+		// obten la lista de "caratulas"a usar por juego
+ 		fTarjetas = new LinkedList<String>( 
+				Arrays.asList( 
+					new File(imgDir+"preg/").list()));
 		String img;	
 		LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
 		// Agrgar Tarjetas
@@ -164,7 +166,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent event){
-		int waitTime = 300;
+		int waitTime = 250;
 		// checar pares
 		if(pressed){
 			//invertimos el estado presionado
