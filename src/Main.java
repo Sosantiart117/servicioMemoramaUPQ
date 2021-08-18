@@ -24,6 +24,8 @@ public class Main implements ActionListener{
 
 	private static Color cBase = 		new Color(0x0C1E42);
 
+	public static String titleImagePath = "./media/icons/title.png";
+
 	public static void main(String args[]){
 		if(args.length != 0) DEBUG = true;
 		new Main();
@@ -81,7 +83,7 @@ public class Main implements ActionListener{
 		AL.setBounds(100, 30, 300, 20);
 		frame.add(AL);
 		// Inicia el titulo principal
-		ImageIcon tIcon = new ImageIcon("../media/icons/title.png");
+		ImageIcon tIcon = new ImageIcon(titleImagePath);
 		// JLabel title = new JLabel("Algebra", JLabel.CENTER);
 		JLabel title = new JLabel();
 		title.setText("Memorama");

@@ -45,7 +45,7 @@ public class Memorama extends JFrame implements ActionListener{
 
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
-	public static String imgDir = "../media/img/";
+	public static String imgDir = "./media/img/";
 	// y se espera encontrar lo mismo en res...
 	private static LinkedList<String> fTarjetas;
 	

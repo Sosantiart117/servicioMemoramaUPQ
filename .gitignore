@@ -1,3 +1,4 @@
 *.class
 .*
-run.sh
+*.sh
+*.jar
