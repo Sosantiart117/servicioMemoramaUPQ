@@ -23,10 +23,20 @@ public class Tarjeta extends JToggleButton{
 	private BufferedImage master;
 	private BufferedImage card;
 
+	// public static boolean enable=false;
+
+	// public void allEnable(){
+	// 	this.setEnabled(enable);
+	// }
+
 	public Tarjeta(int id, boolean ans, String bg){
+		// This if flow grid 
+		// int size=25;
+		// this.setPreferredSize(new Dimension(size*9,size*16));
 		this.setBorder(null);
 		this.setBackground(null);
 		this.setFocusable(false);
+		// this.setEnabled(enable);
 
 		// custom properties
 		this.isAnswer = ans;
@@ -38,7 +48,7 @@ public class Tarjeta extends JToggleButton{
 			master = ImageIO.read(new File(bg));
 			card = ImageIO.read(new File(cubierta));
 		}catch(IOException err){
-			// err.printStackTrace();
+			err.printStackTrace();
 			System.err.println("Foto no cargo");
 		}
 		this.addComponentListener(new ComponentAdapter(){
