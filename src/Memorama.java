@@ -45,7 +45,7 @@ public class Memorama extends JFrame implements ActionListener{
 
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
-	public static String imgDir = "./media/img/";
+	public static String imgDir = "media"+File.separator+"img"+File.separator;
 	// y se espera encontrar lo mismo en res...
 	private static LinkedList<String> fTarjetas;
 	
@@ -207,7 +207,7 @@ public class Memorama extends JFrame implements ActionListener{
 		// obten la lista de "caratulas"a usar por juego
  		fTarjetas = new LinkedList<String>( 
 				Arrays.asList( 
-					new File(imgDir+"preg/").list()));
+					new File(imgDir+"preg"+File.separator).list()));
 		String img;	
 		LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
 		// Agrgar Tarjetas
@@ -215,9 +215,9 @@ public class Memorama extends JFrame implements ActionListener{
 			// Agrega el numero de cartas segun la dificultad
 			img = getTarjetaImg(); 
 			// res
-			Seleccion.add(makeTarjeta(i,false,imgDir+"preg/"+img));
+			Seleccion.add(makeTarjeta(i,false,imgDir+"preg"+File.separator+img));
 			// answer
-			Seleccion.add(makeTarjeta(i,true,imgDir+"res/"+img));
+			Seleccion.add(makeTarjeta(i,true,imgDir+"res"+File.separator+img));
 		}
 
 		// Randomiza el orden de las tarjetas
