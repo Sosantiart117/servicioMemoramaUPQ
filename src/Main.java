@@ -12,6 +12,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.File;
+
 public class Main implements ActionListener{
 
 	public static boolean DEBUG = false;
@@ -24,9 +26,11 @@ public class Main implements ActionListener{
 
 	private static Color cBase = 		new Color(0x0C1E42);
 
-	public static String titleImagePath = "./media/icons/title.png";
+	public static String titleImagePath = "media/icons/title.png".replace("/",File.separator);
 
 	public static void main(String args[]){
+		System.out.println(titleImagePath);
+		System.exit(1);
 		if(args.length != 0) DEBUG = true;
 		new Main();
 		frame.setVisible(true);

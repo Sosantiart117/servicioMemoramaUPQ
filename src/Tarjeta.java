@@ -19,7 +19,7 @@ public class Tarjeta extends JToggleButton{
 	public boolean isAnswer;
 	public String bg;
 
-	private static String cubierta = "media"+File.separator+"icons"+File.separator+"cubierta.png";
+	private static String cubierta = "media/icons/cubierta.png".replace("/",File.separator);
 	private BufferedImage master;
 	private BufferedImage card;
 
