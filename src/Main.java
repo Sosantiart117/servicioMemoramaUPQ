@@ -13,10 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class Main implements ActionListener{
 
-	public static boolean DEBUG = false;
+	public static String PATH;
 
 	private static JFrame frame;
 	private static JLayeredPane base;
@@ -26,12 +27,12 @@ public class Main implements ActionListener{
 
 	private static Color cBase = 		new Color(0x0C1E42);
 
-	public static String titleImagePath = "media/icons/title.png".replace("/",File.separator);
+	public static String titleImagePath;
 
 	public static void main(String args[]){
-		System.out.println(titleImagePath);
-		System.exit(1);
-		if(args.length != 0) DEBUG = true;
+		PATH = args.length!=0?args[0]:"./";
+		titleImagePath = PATH+"media/icons/title.png";
+		titleImagePath.replace("/",File.separator);
 		new Main();
 		frame.setVisible(true);
 	}

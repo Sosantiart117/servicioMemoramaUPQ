@@ -1,0 +1,15 @@
+#Compile
+javac -d classes src/*
+ 
+# RUn 
+java -cp classes Main 
+
+# Compile JAR 
+cd classes 
+jar cfm <memo.jar> ../manifest.txt *
+
+# Package win 
+(in dir for media and jar file)
+jpackage.exe -t exe -i .\ --main-jar memo.jar --main-class Main \
+	--win-menu --win-shortcut --win-dir-chooser --app-version 1.1 \
+	--description "Juego de Memoría" --name Memorama --arguments ".\app\"
