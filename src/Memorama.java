@@ -64,8 +64,10 @@ public class Memorama extends JFrame implements ActionListener{
 	private static int seg =1000;
 	private static int mins=0, segs=0;
 	private static String timeText = "--:--";
-	private static Timer gameTimer = new Timer(false);
- 	private static TimerTask gameTime;
+	private static Timer gameTimer = new Timer(true);
+	private static Timer clock = new Timer(false);
+	private static TimerTask gameClock;
+	private static TimerTask gameTime;
 	public static boolean running = false;
 
 	public static void main(String[] args){
@@ -128,7 +130,7 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setVerticalAlignment(JLabel.CENTER);
 		gameStateText.setHorizontalAlignment(JLabel.CENTER);
 		gameStateText.setForeground(cMain);
-		gameStateText.setBounds(200, 350, 600, 100);
+		gameStateText.setBounds((int)(winSize*2.16), winSize*4, 600, 100);
 		this.add(gameStateText);
 
 	}
@@ -270,7 +272,7 @@ public class Memorama extends JFrame implements ActionListener{
 		// System.out.println("Restart Game");
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
-		gameTime.cancel();
+		gameClock.cancel();
 		level = levelSelector.getSelectedIndex()+1;
 		this.remove(juego);
 		initGame();
@@ -353,10 +355,16 @@ public class Memorama extends JFrame implements ActionListener{
 
 	private static void initTimer(){
 		// set up timer
-		gameTime  = new TimerTask() {
+		gameClock  = new TimerTask() {
 			public void run() {
 				if(!running) return;
 				tiempo-=1000;
+			}
+		};
+		clock.scheduleAtFixedRate(gameClock,2*seg,seg);
+		gameTime  = new TimerTask() {
+			public void run() {
+				// Show time
 				segs=(tiempo/seg)%60;
 				mins=(tiempo/(seg*60))%60;
 				timeText = String.format("%02d:%02d",mins,segs);
@@ -364,7 +372,7 @@ public class Memorama extends JFrame implements ActionListener{
 				if(tiempo<seg) lost();
 			}
 		};
-		gameTimer.scheduleAtFixedRate(gameTime,actionDelay,seg);
+		gameTimer.scheduleAtFixedRate(gameTime, 0,100);
 	}
 
 
