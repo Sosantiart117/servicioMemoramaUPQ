@@ -2,7 +2,7 @@ import javax.swing.JToggleButton;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import java.awt.Color;
+// import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -69,14 +69,14 @@ public class Tarjeta extends JToggleButton{
 					master.getScaledInstance(
 							size.width,
 							size.height,
-							java.awt.Image.SCALE_FAST);
+							java.awt.Image.SCALE_DEFAULT);
 				tj.setSelectedIcon(new ImageIcon(sizedImage));
 				// Back Image
 				Image cover = 
 					card.getScaledInstance(
 							size.width,
 							size.height,
-							java.awt.Image.SCALE_FAST);
+							java.awt.Image.SCALE_REPLICATE);
 				tj.setIcon(new ImageIcon(cover));
 				// tj.setPressedIcon(new ImageIcon(sizedImage));
 			}
