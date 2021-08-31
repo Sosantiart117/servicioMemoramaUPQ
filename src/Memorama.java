@@ -18,6 +18,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import java.io.File;
 import java.util.Arrays;
@@ -135,8 +137,18 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setVerticalAlignment(JLabel.CENTER);
 		gameStateText.setHorizontalAlignment(JLabel.CENTER);
 		gameStateText.setForeground(cMain);
-		gameStateText.setBounds((int)(winSize*2.16), winSize*4, 600, 100);
+		gameStateText.setSize(600, 100);
 		this.add(gameStateText);
+
+		this.addComponentListener(new ComponentAdapter(){
+			@Override
+			public void componentResized(ComponentEvent e){
+				JFrame frame = (JFrame) e.getComponent();
+				gameStateText.setLocation((frame.getWidth()/2)-winSize*5-75, (frame.getHeight()/2)-50);
+				gameStateText.setSize(600, 100);
+			}
+
+		});
 
 	}
 
@@ -217,7 +229,7 @@ public class Memorama extends JFrame implements ActionListener{
 				new GridLayout(
 					gridSize[0],
 					gridSize[1],
-					level==2?40:10,
+					level==2?80:10,
 					10
 					));
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
@@ -259,7 +271,7 @@ public class Memorama extends JFrame implements ActionListener{
 
 		juego.setVisible(false);
 		// Agregar Panel de jeugo a la ventana
-		this.add(juego, BorderLayout.CENTER); 
+		this.add(juego, BorderLayout.CENTER);
 	}
 
 	private static String getTarjetaImg(){
@@ -274,7 +286,6 @@ public class Memorama extends JFrame implements ActionListener{
 		tj.addActionListener(this);
 		tj.setActionCommand("tarjeta");
 		return tj;
-
 	}
 
 	public void actionPerformed(ActionEvent e){
@@ -408,11 +419,11 @@ public class Memorama extends JFrame implements ActionListener{
 
 
 	public static void wait(int ms) {
-			try {
-					Thread.sleep(ms);
-			} catch(InterruptedException ex) {
-					Thread.currentThread().interrupt();
-			}
+		try {
+				Thread.sleep(ms);
+		} catch(InterruptedException ex) {
+				Thread.currentThread().interrupt();
+		}
 	}
 		
 }
