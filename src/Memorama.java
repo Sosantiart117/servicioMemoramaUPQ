@@ -60,6 +60,8 @@ public class Memorama extends JFrame implements ActionListener{
 	private static int nPairs;
 	private static int cuenta;
 	private static int level;
+	private static int penalizacion;
+	private static int bonificacion;
 
 	// pal tiempo
 	private static int actionDelay =250;
@@ -198,15 +200,26 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initGame(){
-		int fLvl = level+1;
-		nPairs = (int)Math.pow(2,fLvl);
+		penalizacion = 2*seg*level;
+		bonificacion = 5*seg*level;
 		cuenta = 0;
-		tiempo = 30*seg*level;
+		tiempo = 30*seg*level*2;
 		// Panel de las tarejatas
 		juego = new JPanel();
 		juego.setBackground(cBase);
+
+		// Size and level manage
+		nPairs = (2*level)+2;
+		int[] gridSize = new int[2];
+		gridSize[0] = level+1;
+		gridSize[1] = 4;
 	 	juego.setLayout(
-				new GridLayout(fLvl==5?4:fLvl,fLvl,10,10));
+				new GridLayout(
+					gridSize[0],
+					gridSize[1],
+					level==2?40:10,
+					10
+					));
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
 
 		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
@@ -348,13 +361,13 @@ public class Memorama extends JFrame implements ActionListener{
 			selected = tj;
 			if(!selected.equals(preSelected) 
 					&& selected.id == preSelected.id){
-				tiempo+=level*10*seg;
+				tiempo+=bonificacion;
 				wait(actionDelay);
 				preSelected.setEnabled(false);
 				selected.setEnabled(false);
 				cuenta++;
 			}else if(!selected.equals(preSelected)){
-				tiempo-=5*seg;
+				tiempo-=penalizacion;
 				wait(actionDelay*2);
 				selected.setSelected(false);
 				preSelected.setSelected(false);
