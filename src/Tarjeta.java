@@ -12,14 +12,20 @@ import java.awt.event.ComponentEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Tarjeta extends JToggleButton{
 
 	public int id;
 	public boolean isAnswer;
 	public String bg;
+	
+	// For clock stop
+	public static LinkedList<String> RENDERING = new LinkedList<String>();
 
-	private static String cubierta = Main.PATH+"media/icons/cubierta.png".replace("/",File.separator);
+	private static String cubierta = 
+		Main.PATH+"media/icons/cubierta.png"
+		.replace("/",File.separator);
 	private BufferedImage master;
 	private BufferedImage card;
 
@@ -55,6 +61,8 @@ public class Tarjeta extends JToggleButton{
 			@Override
 			public void componentResized(ComponentEvent event){
 				Tarjeta tj = (Tarjeta) event.getComponent();
+				// Agregar a la lista de rendereo
+				Tarjeta.RENDERING.add(String.valueOf(tj.id));
 				Dimension size = tj.getSize();
 				Insets insets = tj.getInsets();
  				size.width -= insets.left + insets.right;
@@ -78,7 +86,8 @@ public class Tarjeta extends JToggleButton{
 							size.height,
 							java.awt.Image.SCALE_REPLICATE);
 				tj.setIcon(new ImageIcon(cover));
-				// tj.setPressedIcon(new ImageIcon(sizedImage));
+				// quitar de la lista de rendereo
+				Tarjeta.RENDERING.pop();
 			}
 		});
 	}

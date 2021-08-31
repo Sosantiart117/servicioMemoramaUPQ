@@ -45,7 +45,9 @@ public class Memorama extends JFrame implements ActionListener{
 
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
-	public static String imgDir = Main.PATH+"media/img/".replace("/",File.separator);
+	public static String imgDir = 
+		Main.PATH+"media/img/"
+		.replace("/",File.separator);
 	// y se espera encontrar lo mismo en res...
 	private static LinkedList<String> fTarjetas;
 	
@@ -85,10 +87,11 @@ public class Memorama extends JFrame implements ActionListener{
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (	ClassNotFoundException |
-									InstantiationException |
-									IllegalAccessException |
-									UnsupportedLookAndFeelException ex) {
+				} catch (	
+						ClassNotFoundException |
+						InstantiationException |
+						IllegalAccessException |
+						UnsupportedLookAndFeelException ex) {
 					System.err.println("Error al cargar");
 					// ex.printStackTrace();
 				}
@@ -202,7 +205,8 @@ public class Memorama extends JFrame implements ActionListener{
 		// Panel de las tarejatas
 		juego = new JPanel();
 		juego.setBackground(cBase);
-	 	juego.setLayout(new GridLayout(fLvl==5?4:fLvl,fLvl,10,10));
+	 	juego.setLayout(
+				new GridLayout(fLvl==5?4:fLvl,fLvl,10,10));
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
 
 		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
@@ -217,9 +221,19 @@ public class Memorama extends JFrame implements ActionListener{
 			// Agrega el numero de cartas segun la dificultad
 			img = getTarjetaImg(); 
 			// res
-			Seleccion.add(makeTarjeta(i,false,imgDir+"preg"+File.separator+img));
+			Seleccion.add(
+					makeTarjeta(
+						i,
+						false,
+						imgDir+"preg"+File.separator+img)
+					);
 			// answer
-			Seleccion.add(makeTarjeta(i,true,imgDir+"res"+File.separator+img));
+			Seleccion.add(
+					makeTarjeta(
+						i,
+						true,
+						imgDir+"res"+File.separator+img)
+					);
 		}
 
 		// Randomiza el orden de las tarjetas
@@ -319,6 +333,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private static void lost(){
+		tiempo=0;
 		running=false;
 		pButton.setEnabled(false);
 		gameStateText.setText("Vuelve a Intentar!");
@@ -331,7 +346,8 @@ public class Memorama extends JFrame implements ActionListener{
 		if(pressed){
 			pressed = false;
 			selected = tj;
-			if(!selected.equals(preSelected) && selected.id == preSelected.id){
+			if(!selected.equals(preSelected) 
+					&& selected.id == preSelected.id){
 				tiempo+=level*10*seg;
 				wait(actionDelay);
 				preSelected.setEnabled(false);
@@ -357,11 +373,13 @@ public class Memorama extends JFrame implements ActionListener{
 		// set up timer
 		gameClock  = new TimerTask() {
 			public void run() {
-				if(!running) return;
+				if(!running 
+						&& Tarjeta.RENDERING.isEmpty())
+					return;
 				tiempo-=1000;
 			}
 		};
-		clock.scheduleAtFixedRate(gameClock,2*seg,seg);
+		clock.scheduleAtFixedRate(gameClock,seg,seg);
 		gameTime  = new TimerTask() {
 			public void run() {
 				// Show time
