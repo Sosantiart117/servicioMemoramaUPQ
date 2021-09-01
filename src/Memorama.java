@@ -307,7 +307,6 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	public void restart(){
-		// System.out.println("Restart Game");
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
 		gameClock.cancel();
@@ -397,13 +396,11 @@ public class Memorama extends JFrame implements ActionListener{
 		// set up timer
 		gameClock  = new TimerTask() {
 			public void run() {
-				if(!running 
-						&& Tarjeta.RENDERING.isEmpty())
-					return;
+				if(!running) return;
 				tiempo-=1000;
 			}
 		};
-		clock.scheduleAtFixedRate(gameClock,seg,seg);
+		clock.scheduleAtFixedRate(gameClock,2*seg,seg);
 		gameTime  = new TimerTask() {
 			public void run() {
 				// Show time

@@ -12,7 +12,6 @@ import java.awt.event.ComponentEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class Tarjeta extends JToggleButton{
 
@@ -20,9 +19,6 @@ public class Tarjeta extends JToggleButton{
 	public boolean isAnswer;
 	public String bg;
 	
-	// For clock stop
-	public static LinkedList<String> RENDERING = new LinkedList<String>();
-
 	private static String cubierta = 
 		Main.PATH+"media/icons/cubierta.png"
 		.replace("/",File.separator);
@@ -62,32 +58,38 @@ public class Tarjeta extends JToggleButton{
 			public void componentResized(ComponentEvent event){
 				Tarjeta tj = (Tarjeta) event.getComponent();
 				// Agregar a la lista de rendereo
-				Tarjeta.RENDERING.add(String.valueOf(tj.id));
-				Dimension size = tj.getSize();
-				Insets insets = tj.getInsets();
- 				size.width -= insets.left + insets.right;
-				size.height -= insets.top + insets.bottom;
-				if (size.width > size.height) {
-					size.width = -1;
-				} else {
-					size.height = -1;
-				}
-				// Content image
-				Image sizedImage = 
-					master.getScaledInstance(
-							size.width,
-							size.height,
-							java.awt.Image.SCALE_DEFAULT);
-				tj.setSelectedIcon(new ImageIcon(sizedImage));
-				// Back Image
-				Image cover = 
-					card.getScaledInstance(
-							size.width,
-							size.height,
-							java.awt.Image.SCALE_REPLICATE);
-				tj.setIcon(new ImageIcon(cover));
-				// quitar de la lista de rendereo
-				Tarjeta.RENDERING.pop();
+				Thread tjRen = new Thread(
+						new Runnable(){
+							@Override
+							public void run(){
+								Dimension size = tj.getSize();
+								Insets insets = tj.getInsets();
+								size.width -= insets.left + insets.right;
+								size.height -= insets.top + insets.bottom;
+								if (size.width > size.height) {
+									size.width = -1;
+								} else {
+									size.height = -1;
+								}
+								Image sizedImage = 
+									master.getScaledInstance(
+											size.width,
+											size.height,
+											java.awt.Image.SCALE_DEFAULT);
+								tj.setSelectedIcon(
+										new ImageIcon(sizedImage));
+								// Back Image
+								Image cover = 
+									card.getScaledInstance(
+											size.width,
+											size.height,
+											java.awt.Image.SCALE_REPLICATE);
+								tj.setIcon(new ImageIcon(cover));
+							};
+						}
+						);
+				tjRen.setName("Tarjeta-"+tj.id);
+				tjRen.start();
 			}
 		});
 	}
