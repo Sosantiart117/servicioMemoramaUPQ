@@ -104,7 +104,7 @@ public class Main implements ActionListener{
 
 	private void initLevel(){
 		// Selector de dificultad
-		String[] niveles = {"fácil", "Medio", "Dificl"};
+		String[] niveles = {"Facil", "Medio", "Dificil"};
 	 	lvlSelector = new JComboBox<String>(niveles);
 		lvlSelector.setSelectedItem(0);
 		lvlSelector.setBounds(190, 350,120,20);

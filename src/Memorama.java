@@ -35,7 +35,7 @@ public class Memorama extends JFrame implements ActionListener{
 	// private static Color cSec = 		new Color(0x2E4205);
 	// private static Color cContr = 	new Color(0x668F13);
 
-	private static int winSize = 90; // para mantener un aspecto de 16:9 son 80px · 16:9
+	private static int winSize = 80; // para mantener un aspecto de 16:9 son 80px · 16:9
 	private static JPanel juego;
 	private static JPanel opciones;
 	private static JLabel timeLabel;
@@ -173,7 +173,7 @@ public class Memorama extends JFrame implements ActionListener{
 		timeLabel.setBounds(125,100,200,200);
 		opciones.add(timeLabel);
 
-		String[] lvls = {"Fácil","Medio","Difícil"};
+		String[] lvls = {"Facil","Medio","Dificil"};
 		levelSelector = new JComboBox<String>(lvls);
 		levelSelector.setFocusable(false);
 		levelSelector.setBounds(165, 400, 120, 20);
