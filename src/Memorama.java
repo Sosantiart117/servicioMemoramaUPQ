@@ -35,7 +35,7 @@ public class Memorama extends JFrame implements ActionListener{
 	// private static Color cSec = 		new Color(0x2E4205);
 	// private static Color cContr = 	new Color(0x668F13);
 
-	private static int winSize = 80; // para mantener un aspecto de 16:9 son 80px · 16:9
+	private static int winSize = 80; // Cambio a aspecto apple 16:10 *88 = 1280 * 800
 	private static JPanel juego;
 	private static JPanel opciones;
 	private static JLabel timeLabel;
@@ -120,7 +120,7 @@ public class Memorama extends JFrame implements ActionListener{
 		// técnico 
 		this.setTitle("Memorama"); //Nombre de la ventana
 		// this.setResizable(true); // tamaño fijo
-		this.setSize(winSize*16,winSize*9); // x y 
+		this.setSize(winSize*16,winSize*10); // x y 
 		this.setLocationRelativeTo(null); //aparece en el centro del moitor
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Termina cuando cierre
 		
@@ -153,11 +153,13 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initOptions(){
+		int pannelWidth = winSize *5;
 		Font optFont = new Font("Hack",Font.BOLD,26);
 
 		// Panel al lado
 		opciones = new JPanel();
-		opciones.setPreferredSize(new DimensionUIResource(winSize*5,100));
+		opciones.setPreferredSize(
+				new DimensionUIResource(pannelWidth,100));
 		opciones.setLayout(null);
 		opciones.setBackground(cMain);
 
@@ -170,13 +172,13 @@ public class Memorama extends JFrame implements ActionListener{
 		timeLabel.setOpaque(true);
 		timeLabel.setForeground(cMain);
 		timeLabel.setFont(optFont);
-		timeLabel.setBounds(125,100,200,200);
+		timeLabel.setBounds((pannelWidth-200)/2,100,200,200);
 		opciones.add(timeLabel);
 
 		String[] lvls = {"Facil","Medio","Dificil"};
 		levelSelector = new JComboBox<String>(lvls);
 		levelSelector.setFocusable(false);
-		levelSelector.setBounds(165, 400, 120, 20);
+		levelSelector.setBounds((pannelWidth-120)/2, 400, 120, 20);
 		levelSelector.setSelectedIndex(level-1);
 		levelSelector.setEnabled(false);
 		opciones.add(levelSelector);
@@ -184,7 +186,7 @@ public class Memorama extends JFrame implements ActionListener{
 		sButton = new JButton("Inicio");
 		sButton.setActionCommand("start");
 		sButton.setFocusable(false);
-		sButton.setBounds(125, 600, 200, 50);
+		sButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
 		sButton.setFont(optFont);
 		sButton.addActionListener(this);
 		opciones.add(sButton);
@@ -192,7 +194,7 @@ public class Memorama extends JFrame implements ActionListener{
 		resButton = new JButton("Reinicio");
 		resButton.setActionCommand("restart");
 		resButton.setFocusable(false);
-		resButton.setBounds(100, 500, 250, 50);
+		resButton.setBounds((pannelWidth-250)/2, 500, 250, 50);
 		resButton.setFont(optFont);
 		resButton.setEnabled(false);
 		resButton.addActionListener(this);
@@ -201,7 +203,7 @@ public class Memorama extends JFrame implements ActionListener{
 		pButton = new JToggleButton("Pausa");
 		pButton.setActionCommand("stop");
 		pButton.setFocusable(false);
-		pButton.setBounds(125, 600, 200, 50);
+		pButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
 		pButton.setFont(optFont);
 		pButton.setVisible(false);
 		pButton.addActionListener(this);
@@ -229,7 +231,7 @@ public class Memorama extends JFrame implements ActionListener{
 				new GridLayout(
 					gridSize[0],
 					gridSize[1],
-					level==2?80:10,
+					level==2?winSize:10,
 					10
 					));
 	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
@@ -397,7 +399,7 @@ public class Memorama extends JFrame implements ActionListener{
 		gameClock  = new TimerTask() {
 			public void run() {
 				if(!running) return;
-				tiempo-=1000;
+				tiempo-=seg;
 			}
 		};
 		clock.scheduleAtFixedRate(gameClock,2*seg,seg);
