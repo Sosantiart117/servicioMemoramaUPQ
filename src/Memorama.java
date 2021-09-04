@@ -36,15 +36,11 @@ public class Memorama extends JFrame implements ActionListener{
 	// private static Color cContr = 	new Color(0x668F13);
 
 	private static int winSize = 80; // Cambio a aspecto apple 16:10 *88 = 1280 * 800
-	private static JPanel juego;
-	private static JPanel opciones;
-	private static JLabel timeLabel;
 	private static JLabel gameStateText;
-	private static JButton sButton;
-	private static JButton resButton;
-	private static JToggleButton pButton;
-	private static JComboBox<String> levelSelector;
 
+	private static OptionsPanel opciones;
+
+	private static JPanel juego;
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
 	public static String imgDir = 
@@ -153,63 +149,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initOptions(){
-		int pannelWidth = winSize *5;
-		Font optFont = new Font("Hack",Font.BOLD,26);
-
-		// Panel al lado
-		opciones = new JPanel();
-		opciones.setPreferredSize(
-				new DimensionUIResource(pannelWidth,100));
-		opciones.setLayout(null);
-		opciones.setBackground(cMain);
-
-		// TImeLabel
-		timeLabel = new JLabel(timeText);
-		timeLabel.setFocusable(false);
-		timeLabel.setHorizontalAlignment(JLabel.CENTER);
-		timeLabel.setVerticalAlignment(JLabel.CENTER);
-		timeLabel.setBackground(cBase);
-		timeLabel.setOpaque(true);
-		timeLabel.setForeground(cMain);
-		timeLabel.setFont(optFont);
-		timeLabel.setBounds((pannelWidth-200)/2,100,200,200);
-		opciones.add(timeLabel);
-
-		String[] lvls = {"Facil","Medio","Dificil"};
-		levelSelector = new JComboBox<String>(lvls);
-		levelSelector.setFocusable(false);
-		levelSelector.setBounds((pannelWidth-120)/2, 400, 120, 20);
-		levelSelector.setSelectedIndex(level-1);
-		levelSelector.setEnabled(false);
-		opciones.add(levelSelector);
-
-		sButton = new JButton("Inicio");
-		sButton.setActionCommand("start");
-		sButton.setFocusable(false);
-		sButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
-		sButton.setFont(optFont);
-		sButton.addActionListener(this);
-		opciones.add(sButton);
-
-		resButton = new JButton("Reinicio");
-		resButton.setActionCommand("restart");
-		resButton.setFocusable(false);
-		resButton.setBounds((pannelWidth-250)/2, 500, 250, 50);
-		resButton.setFont(optFont);
-		resButton.setEnabled(false);
-		resButton.addActionListener(this);
-		opciones.add(resButton);
-
-		pButton = new JToggleButton("Pausa");
-		pButton.setActionCommand("stop");
-		pButton.setFocusable(false);
-		pButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
-		pButton.setFont(optFont);
-		pButton.setVisible(false);
-		pButton.addActionListener(this);
-		opciones.add(pButton);
-
-		// acabar agregadno esto al memorama
+		opciones = new OptionsPanel(winSize, level, timeText, this);
 		this.add(opciones, BorderLayout.EAST);
 	}
 
@@ -312,7 +252,7 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
 		gameClock.cancel();
-		level = levelSelector.getSelectedIndex()+1;
+		level = opciones.levelSelector.getSelectedIndex()+1;
 		this.remove(juego);
 		initGame();
 		initTimer();
@@ -320,16 +260,16 @@ public class Memorama extends JFrame implements ActionListener{
 		this.validate();
 		this.repaint();
 		running=false;
-		sButton.setVisible(true);
-		if(pButton.isSelected()) pButton.setSelected(false);
-		if(!pButton.isEnabled()) pButton.setEnabled(true);
-		levelSelector.setEnabled(false);
+		opciones.sButton.setVisible(true);
+		if(opciones.pButton.isSelected()) opciones.pButton.setSelected(false);
+		if(!opciones.pButton.isEnabled()) opciones.pButton.setEnabled(true);
+		opciones.levelSelector.setEnabled(false);
 		wait(3*seg);
 		start();
 	}
 
 	private static void stop(){
-		if(pButton.isSelected()){
+		if(opciones.pButton.isSelected()){
 			gameStateText.setVisible(true);
 			running = false;
 			juego.setVisible(false);
@@ -345,22 +285,22 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setVisible(false);
 		gameStateText.setText("Juego Pausado");
 		juego.setVisible(true);
-		sButton.setVisible(false);
-		pButton.setVisible(true);
-		resButton.setEnabled(true);
+		opciones.sButton.setVisible(false);
+		opciones.pButton.setVisible(true);
+		opciones.resButton.setEnabled(true);
 	}
 
 	private static void won(){
 		running=false;
-		levelSelector.setEnabled(true);
-		pButton.setVisible(false);
+		opciones.levelSelector.setEnabled(true);
+		opciones.pButton.setVisible(false);
 		gameStateText.setText("Ganaste!");
 	}
 
 	private static void lost(){
 		tiempo=0;
 		running=false;
-		pButton.setEnabled(false);
+		opciones.pButton.setEnabled(false);
 		gameStateText.setText("Vuelve a Intentar!");
 		gameStateText.setVisible(true);
 		juego.setVisible(false);
@@ -409,7 +349,7 @@ public class Memorama extends JFrame implements ActionListener{
 				segs=(tiempo/seg)%60;
 				mins=(tiempo/(seg*60))%60;
 				timeText = String.format("%02d:%02d",mins,segs);
-				timeLabel.setText(timeText);
+				opciones.timeLabel.setText(timeText);
 				if(tiempo<seg) lost();
 			}
 		};
