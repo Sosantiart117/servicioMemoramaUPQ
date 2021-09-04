@@ -1,12 +1,6 @@
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.JLabel;
-import javax.swing.plaf.DimensionUIResource;
-// import javax.swing.Action;
-// import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -14,15 +8,12 @@ import java.awt.EventQueue;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
-// import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,15 +30,13 @@ public class Memorama extends JFrame implements ActionListener{
 	private static JLabel gameStateText;
 
 	private static OptionsPanel opciones;
+	private static GamePanel juego;
 
-	private static JPanel juego;
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
 	public static String imgDir = 
 		Main.PATH+"media/img/"
 		.replace("/",File.separator);
-	// y se espera encontrar lo mismo en res...
-	private static LinkedList<String> fTarjetas;
 	
 	// global vars for comparation
 	private static boolean pressed = false;
@@ -61,9 +50,9 @@ public class Memorama extends JFrame implements ActionListener{
 	private static int penalizacion;
 	private static int bonificacion;
 
-	// pal tiempo
+	// For time
+	public static int seg =1000;
 	private static int actionDelay =250;
-	private static int seg =1000;
 	private static int mins=0, segs=0;
 	private static String timeText = "--:--";
 	private static Timer gameTimer = new Timer(true);
@@ -126,7 +115,7 @@ public class Memorama extends JFrame implements ActionListener{
 		this.getContentPane().setBackground(cBase); //hacerle un color base
 		this.setLayout(new BorderLayout(10,0));
 
-		// Game Pause
+		// Game State
 		gameStateText = new JLabel("Memorama");
 		gameStateText.setFont(new Font("Arial",Font.BOLD,65));
 		gameStateText.setFocusable(false);
@@ -154,80 +143,13 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initGame(){
-		penalizacion = 2*seg*level;
-		bonificacion = 5*seg*level;
-		cuenta = 0;
-		tiempo = 30*seg*level*2;
-		// Panel de las tarejatas
-		juego = new JPanel();
-		juego.setBackground(cBase);
-
-		// Size and level manage
-		nPairs = (2*level)+2;
-		int[] gridSize = new int[2];
-		gridSize[0] = level+1;
-		gridSize[1] = 4;
-	 	juego.setLayout(
-				new GridLayout(
-					gridSize[0],
-					gridSize[1],
-					level==2?winSize:10,
-					10
-					));
-	 	// juego.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
-
-		// Obtiene una lista aleatoria de imagenes del conjutno de imagenes
-		// obten la lista de "caratulas"a usar por juego
- 		fTarjetas = new LinkedList<String>( 
-				Arrays.asList( 
-					new File(imgDir+"preg"+File.separator).list()));
-		String img;	
-		LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
-		// Agrgar Tarjetas
-		for(int i=0; i<nPairs;i++){
-			// Agrega el numero de cartas segun la dificultad
-			img = getTarjetaImg(); 
-			// res
-			Seleccion.add(
-					makeTarjeta(
-						i,
-						false,
-						imgDir+"preg"+File.separator+img)
-					);
-			// answer
-			Seleccion.add(
-					makeTarjeta(
-						i,
-						true,
-						imgDir+"res"+File.separator+img)
-					);
-		}
-
-		// Randomiza el orden de las tarjetas
-		int randSelection;
-		for(int i=0; i<nPairs*2; i++){
-			randSelection = (int)(Math.random() * (double) Seleccion.size());
-			juego.add(Seleccion.get(randSelection));
-			Seleccion.remove(randSelection);
-		}
-
-		juego.setVisible(false);
-		// Agregar Panel de jeugo a la ventana
+		juego = new GamePanel(winSize, level, imgDir, this);
+		tiempo = juego.tiempo;
+		nPairs = juego.nPairs;
+		cuenta = juego.cuenta;
+		penalizacion = juego.penalizacion;
+		bonificacion = juego.penalizacion;
 		this.add(juego, BorderLayout.CENTER);
-	}
-
-	private static String getTarjetaImg(){
-		int randSelection = (int)(Math.random() * (double)fTarjetas.size());
-		String tarjeta = fTarjetas.get(randSelection);
-		fTarjetas.remove(randSelection);
-		return tarjeta;
-	}
-
-	private Tarjeta makeTarjeta(int id, boolean isAns, String img ){
-		Tarjeta tj = new Tarjeta(id,isAns,img);
-		tj.addActionListener(this);
-		tj.setActionCommand("tarjeta");
-		return tj;
 	}
 
 	public void actionPerformed(ActionEvent e){

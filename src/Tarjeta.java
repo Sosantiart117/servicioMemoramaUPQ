@@ -16,7 +16,6 @@ import java.io.IOException;
 public class Tarjeta extends JToggleButton{
 
 	public int id;
-	public boolean isAnswer;
 	public String bg;
 	
 	private static String cubierta = 
@@ -31,7 +30,7 @@ public class Tarjeta extends JToggleButton{
 	// 	this.setEnabled(enable);
 	// }
 
-	public Tarjeta(int id, boolean ans, String bg){
+	public Tarjeta(int id, String bg){
 		// This if flow grid 
 		// int size=25;
 		// this.setPreferredSize(new Dimension(size*9,size*16));
@@ -41,7 +40,6 @@ public class Tarjeta extends JToggleButton{
 		// this.setEnabled(enable);
 
 		// custom properties
-		this.isAnswer = ans;
 		this.id = id;
 
 		// this.setSelectedIcon(getSizedIcon(bg));
