@@ -13,17 +13,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class Main implements ActionListener{
 
-	public static String PATH;
+	public static String PATH = "./";
+	public static String[] LEVELS = {"Facil","Medio","Dificil"};
 
 	private static JFrame frame;
 	private static JLayeredPane base;
 	private static JButton startB;
-	private static int selectedLevel = 1;
 	private static JComboBox<String> lvlSelector ;
-
+	private static JComboBox<String> dirSelector ;
+	private static String FILESDIR = PATH+"media/img/".replace("/", File.separator);
 	private static Color cBase = 		new Color(0x0C1E42);
 
 	public static String titleImagePath;
@@ -46,7 +48,9 @@ public class Main implements ActionListener{
 		// Add title
 		initTitle();
 		// Dificultad
-		this.initLevel();
+		initLevel();
+		// Distintis temas
+		this.initDirSelector();
 		// Botton de inicio
 		this.initSButton();
 
@@ -102,36 +106,63 @@ public class Main implements ActionListener{
 		frame.add(title);
 	}
 
-	private void initLevel(){
+	private void initDirSelector(){
+		// Selector de Directorios 
+		String[] dirs = getDirs(FILESDIR);
+	 	dirSelector = new JComboBox<String>(dirs);
+		dirSelector.setSelectedItem(null);
+		dirSelector.setBounds(190, 350,120,20);
+		dirSelector.addActionListener(this);
+		frame.add(dirSelector);
+	}
+
+	private static void initLevel(){
 		// Selector de dificultad
-		String[] niveles = {"Facil", "Medio", "Dificil"};
-	 	lvlSelector = new JComboBox<String>(niveles);
-		lvlSelector.setSelectedItem(0);
-		lvlSelector.setBounds(190, 350,120,20);
+	 	lvlSelector = new JComboBox<String>();
+		// lvlSelector.setSelectedItem(0);
+		lvlSelector.setBounds(190, 380,120,20);
 		frame.add(lvlSelector);
+	}
+
+	private static String[] getDirs(String dirName){
+		String[] dirs = new File(dirName).list(); 
+		return dirs;
 	}
 
 	private void initSButton(){
 		// Buton de inicion
 		startB = new JButton("Inicio");
-		startB.setBounds(200, 400, 100, 50);
+		startB.setBounds(200, 420, 100, 50);
 		startB.addActionListener(this);
 		startB.setActionCommand("Start");
 		frame.add(startB);
 	}
 
-	private static void startMemorama(int lvl){
+	private static void startMemorama(int lvl,String lvlDir){
 		// Inicia el Juego
-		new Memorama(lvl).setVisible(true);
+		new Memorama(lvl, lvlDir).setVisible(true);
 		frame.setVisible(false);
 		frame.dispose();
 	}
 
-	public void actionPerformed(ActionEvent event){
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == dirSelector){
+			lvlSelector.removeAllItems();
+			for(String i : getDirs(FILESDIR + dirSelector.getSelectedItem().toString())){
+				lvlSelector.addItem(i);
+			}
+		}
 		// If button selected
-		if(event.getSource() == startB){
-			selectedLevel = lvlSelector.getSelectedIndex() +1; // get lvl
-			startMemorama(selectedLevel);// start game
+		if(e.getSource() == startB){
+			int selectedLevel = Arrays.asList(LEVELS).indexOf(
+						lvlSelector.getSelectedItem().toString()) +1;
+
+			FILESDIR+= 
+				dirSelector.getSelectedItem().toString() +
+				File.separator + 
+				lvlSelector.getSelectedItem().toString() +
+				File.separator;
+			startMemorama(selectedLevel,FILESDIR);// start game
 		}
 	}
 

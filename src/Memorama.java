@@ -1,5 +1,4 @@
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,7 +13,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,8 +32,8 @@ public class Memorama extends JFrame implements ActionListener{
 
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
-	public static String imgDir = 
-		Main.PATH+"media/img/"
+	public static String DATADIR = 
+		Main.PATH + "media/img/Algebra_Lineal/"
 		.replace("/",File.separator);
 	
 	// global vars for comparation
@@ -66,11 +64,16 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	public Memorama(){
-		this(1);
+		this(1,DATADIR);
 	}
 
-	public Memorama(int lvl){
-		level=lvl;
+	public Memorama(String LevelDir){
+		this(1,LevelDir);
+	}
+
+	public Memorama(int lvl, String LevelDir){
+		level= lvl;
+		DATADIR = LevelDir;
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -143,7 +146,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initGame(){
-		juego = new GamePanel(winSize, level, imgDir, this);
+		juego = new GamePanel(winSize, level, DATADIR, this);
 		tiempo = juego.tiempo;
 		nPairs = juego.nPairs;
 		cuenta = juego.cuenta;
