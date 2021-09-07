@@ -32,9 +32,9 @@ public class Memorama extends JFrame implements ActionListener{
 
 	// Escoger tarjetas
 	// dir preg sirve como master para sacar imagenes
-	public static String DATADIR = 
-		Main.PATH + "media/img/Algebra_Lineal/"
-		.replace("/",File.separator);
+	public static String LEVELDIR = 
+		Main.PATH + "media/img/Matrices/"
+				.replace("/",File.separator);
 	
 	// global vars for comparation
 	private static boolean pressed = false;
@@ -64,16 +64,20 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	public Memorama(){
-		this(1,DATADIR);
+		this(1,LEVELDIR);
 	}
 
-	public Memorama(String LevelDir){
-		this(1,LevelDir);
+	public Memorama(String levelDir){
+		this(1,levelDir);
 	}
 
-	public Memorama(int lvl, String LevelDir){
+	public Memorama(int lvl){
+		this(lvl,LEVELDIR);
+	}
+
+	public Memorama(int lvl, String levelDir){
 		level= lvl;
-		DATADIR = LevelDir;
+		LEVELDIR = levelDir;
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -146,7 +150,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initGame(){
-		juego = new GamePanel(winSize, level, DATADIR, this);
+		juego = new GamePanel(winSize, level, LEVELDIR, this);
 		tiempo = juego.tiempo;
 		nPairs = juego.nPairs;
 		cuenta = juego.cuenta;
@@ -177,7 +181,7 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
 		gameClock.cancel();
-		level = opciones.levelSelector.getSelectedIndex()+1;
+		level = opciones.levelSelector.getSelectedLevel();
 		this.remove(juego);
 		initGame();
 		initTimer();
@@ -280,7 +284,6 @@ public class Memorama extends JFrame implements ActionListener{
 		};
 		gameTimer.scheduleAtFixedRate(gameTime, 0,100);
 	}
-
 
 	public static void wait(int ms) {
 		try {

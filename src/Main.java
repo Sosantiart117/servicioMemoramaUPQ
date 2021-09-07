@@ -2,30 +2,27 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-// import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
-// import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class Main implements ActionListener{
 
 	public static String PATH = "./";
-	public static String[] LEVELS = {"Facil","Medio","Dificil"};
+	public static String FILESDIR = PATH+"media/img/".replace("/", File.separator);
+	public static String SELECTEDDIR;
 
 	private static JFrame frame;
 	private static JLayeredPane base;
 	private static JButton startB;
-	private static JComboBox<String> lvlSelector ;
+	private static LevelSelector lvlSelector ;
 	private static JComboBox<String> dirSelector ;
-	private static String FILESDIR = PATH+"media/img/".replace("/", File.separator);
 	private static Color cBase = 		new Color(0x0C1E42);
 
 	public static String titleImagePath;
@@ -67,9 +64,7 @@ public class Main implements ActionListener{
 		
 		// Apraciencia
 		// El image hay que importarlo y tener un archivo
-		// frame.setIconImage(new ImageIcon("archivo.png").getImage());
 		frame.getContentPane().setBackground(cBase); //hacerle un color base
-		// frame.setLayout(new BorderLayout(10,0));
 		frame.setLayout(null);
 		
 	}
@@ -78,7 +73,6 @@ public class Main implements ActionListener{
 		// layered
 		base = new JLayeredPane();
 		base.setBackground(cBase);
-		// base.setLayout(new BorderLayout(10,0));
 		frame.add(base);
 	}
 
@@ -118,13 +112,13 @@ public class Main implements ActionListener{
 
 	private static void initLevel(){
 		// Selector de dificultad
-	 	lvlSelector = new JComboBox<String>();
-		// lvlSelector.setSelectedItem(0);
+	 	lvlSelector = new LevelSelector();
 		lvlSelector.setBounds(190, 380,120,20);
 		frame.add(lvlSelector);
 	}
 
-	private static String[] getDirs(String dirName){
+
+	public static String[] getDirs(String dirName){
 		String[] dirs = new File(dirName).list(); 
 		return dirs;
 	}
@@ -147,21 +141,20 @@ public class Main implements ActionListener{
 
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource() == dirSelector){
-			lvlSelector.removeAllItems();
-			for(String i : getDirs(FILESDIR + dirSelector.getSelectedItem().toString())){
-				lvlSelector.addItem(i);
-			}
+			SELECTEDDIR = FILESDIR + dirSelector.getSelectedItem().toString();
+			lvlSelector.updateSelection(SELECTEDDIR);
 		}
+
 		// If button selected
 		if(e.getSource() == startB){
-			int selectedLevel = Arrays.asList(LEVELS).indexOf(
-						lvlSelector.getSelectedItem().toString()) +1;
+			int selectedLevel = lvlSelector.getSelectedLevel();
 
-			FILESDIR+= 
+			FILESDIR +=
 				dirSelector.getSelectedItem().toString() +
 				File.separator + 
 				lvlSelector.getSelectedItem().toString() +
 				File.separator;
+
 			startMemorama(selectedLevel,FILESDIR);// start game
 		}
 	}

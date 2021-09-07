@@ -2,7 +2,6 @@ import javax.swing.JToggleButton;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-// import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;

@@ -2,7 +2,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JComboBox;
 import javax.swing.plaf.DimensionUIResource;
 
 import java.awt.event.ActionListener;
@@ -19,7 +18,7 @@ public class OptionsPanel extends JPanel{
 	// private static Color cContr = 	new Color(0x668F13);
 
 	public JLabel timeLabel;
-	public JComboBox<String> levelSelector;
+	public LevelSelector levelSelector;
 	public JButton sButton;
 	public JButton resButton;
 	public JToggleButton pButton;
@@ -49,11 +48,10 @@ public class OptionsPanel extends JPanel{
 		this.add(timeLabel);
 
 		// Level Selector
-		String[] lvls = {"Facil","Medio","Dificil"};
-		this.levelSelector = new JComboBox<String>(lvls);
+		this.levelSelector = new LevelSelector(Main.SELECTEDDIR);
+		this.levelSelector.setSelectedIndex(level-1);
 		this.levelSelector.setFocusable(false);
 		this.levelSelector.setBounds((pannelWidth-120)/2, 400, 120, 20);
-		this.levelSelector.setSelectedIndex(level-1);
 		this.levelSelector.setEnabled(false);
 		this.add(levelSelector);
 
@@ -86,6 +84,5 @@ public class OptionsPanel extends JPanel{
 		this.pButton.addActionListener(listener);
 		this.add(pButton);
 	}
-
 	
 }
