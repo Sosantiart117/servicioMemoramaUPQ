@@ -33,7 +33,7 @@ public class LevelSelector extends JComboBox<String>{
 	}
 
 	public void updateSelection(){
-		this.removeAll();
+		this.removeAllItems();
 		this.addItems(getLevels(this.selectedDir));
 	}
 

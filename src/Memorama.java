@@ -24,7 +24,7 @@ public class Memorama extends JFrame implements ActionListener{
 	// private static Color cSec = 		new Color(0x2E4205);
 	// private static Color cContr = 	new Color(0x668F13);
 
-	private static int winSize = 80; // Cambio a aspecto apple 16:10 *88 = 1280 * 800
+	private static int WINSIZE = 80; // Cambio a aspecto apple 16:10 *88 = 1280 * 800
 	private static JLabel gameStateText;
 
 	private static OptionsPanel opciones;
@@ -41,18 +41,18 @@ public class Memorama extends JFrame implements ActionListener{
 	private static Tarjeta selected,preSelected;
 
 	// global for win state / game state
-	public static int tiempo=0;
-	private static int nPairs;
-	private static int cuenta;
-	private static int level;
-	private static int penalizacion;
-	private static int bonificacion;
+	public static int TIME=0;
+	private static int PAIRS;
+	private static int COUNT;
+	private static int LEVEL;
+	private static int PENAL;
+	private static int BONUS;
 
 	// For time
-	public static int seg =1000;
-	private static int actionDelay =250;
-	private static int mins=0, segs=0;
-	private static String timeText = "--:--";
+	public static int SEG =1000;
+	private static int DELAY =250;
+	private static int MINS=0, SEGS=0;
+	private static String TIMETEXT = "--:--";
 	private static Timer gameTimer = new Timer(true);
 	private static Timer clock = new Timer(false);
 	private static TimerTask gameClock;
@@ -76,7 +76,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	public Memorama(int lvl, String levelDir){
-		level= lvl;
+		LEVEL= lvl;
 		LEVELDIR = levelDir;
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -112,7 +112,7 @@ public class Memorama extends JFrame implements ActionListener{
 		// técnico 
 		this.setTitle("Memorama"); //Nombre de la ventana
 		// this.setResizable(true); // tamaño fijo
-		this.setSize(winSize*16,winSize*10); // x y 
+		this.setSize(WINSIZE*16,WINSIZE*10); // x y 
 		this.setLocationRelativeTo(null); //aparece en el centro del moitor
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Termina cuando cierre
 		
@@ -136,7 +136,7 @@ public class Memorama extends JFrame implements ActionListener{
 			@Override
 			public void componentResized(ComponentEvent e){
 				JFrame frame = (JFrame) e.getComponent();
-				gameStateText.setLocation((frame.getWidth()/2)-winSize*5-75, (frame.getHeight()/2)-50);
+				gameStateText.setLocation((frame.getWidth()/2)-WINSIZE*5-75, (frame.getHeight()/2)-50);
 				gameStateText.setSize(600, 100);
 			}
 
@@ -145,17 +145,17 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private void initOptions(){
-		opciones = new OptionsPanel(winSize, level, timeText, this);
+		opciones = new OptionsPanel(WINSIZE, LEVEL, TIMETEXT, this);
 		this.add(opciones, BorderLayout.EAST);
 	}
 
 	private void initGame(){
-		juego = new GamePanel(winSize, level, LEVELDIR, this);
-		tiempo = juego.tiempo;
-		nPairs = juego.nPairs;
-		cuenta = juego.cuenta;
-		penalizacion = juego.penalizacion;
-		bonificacion = juego.penalizacion;
+		juego = new GamePanel(WINSIZE, LEVEL, LEVELDIR, this);
+		TIME = juego.tiempo;
+		PAIRS = juego.nPairs;
+		COUNT = juego.cuenta;
+		PENAL = juego.penalizacion;
+		BONUS = juego.penalizacion;
 		this.add(juego, BorderLayout.CENTER);
 	}
 
@@ -181,7 +181,7 @@ public class Memorama extends JFrame implements ActionListener{
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
 		gameClock.cancel();
-		level = opciones.levelSelector.getSelectedLevel();
+		LEVEL = opciones.levelSelector.getSelectedLevel();
 		this.remove(juego);
 		initGame();
 		initTimer();
@@ -193,7 +193,7 @@ public class Memorama extends JFrame implements ActionListener{
 		if(opciones.pButton.isSelected()) opciones.pButton.setSelected(false);
 		if(!opciones.pButton.isEnabled()) opciones.pButton.setEnabled(true);
 		opciones.levelSelector.setEnabled(false);
-		wait(3*seg);
+		wait(3*SEG);
 		start();
 	}
 
@@ -227,7 +227,7 @@ public class Memorama extends JFrame implements ActionListener{
 	}
 
 	private static void lost(){
-		tiempo=0;
+		TIME=0;
 		running=false;
 		opciones.pButton.setEnabled(false);
 		gameStateText.setText("Vuelve a Intentar!");
@@ -242,14 +242,14 @@ public class Memorama extends JFrame implements ActionListener{
 			selected = tj;
 			if(!selected.equals(preSelected) 
 					&& selected.id == preSelected.id){
-				tiempo+=bonificacion;
-				wait(actionDelay);
+				TIME+=BONUS;
+				wait(DELAY);
 				preSelected.setEnabled(false);
 				selected.setEnabled(false);
-				cuenta++;
+				COUNT++;
 			}else if(!selected.equals(preSelected)){
-				tiempo-=penalizacion;
-				wait(actionDelay*2);
+				TIME-=PENAL;
+				wait(DELAY*2);
 				selected.setSelected(false);
 				preSelected.setSelected(false);
 			}
@@ -258,7 +258,7 @@ public class Memorama extends JFrame implements ActionListener{
 			preSelected = tj;
 		}
 		// gano ? 
-		if(cuenta == nPairs){
+		if(COUNT == PAIRS){
 			won();
 		}
 	}
@@ -268,18 +268,18 @@ public class Memorama extends JFrame implements ActionListener{
 		gameClock  = new TimerTask() {
 			public void run() {
 				if(!running) return;
-				tiempo-=seg;
+				TIME-=SEG;
 			}
 		};
-		clock.scheduleAtFixedRate(gameClock,2*seg,seg);
+		clock.scheduleAtFixedRate(gameClock,2*SEG,SEG);
 		gameTime  = new TimerTask() {
 			public void run() {
 				// Show time
-				segs=(tiempo/seg)%60;
-				mins=(tiempo/(seg*60))%60;
-				timeText = String.format("%02d:%02d",mins,segs);
-				opciones.timeLabel.setText(timeText);
-				if(tiempo<seg) lost();
+				SEGS=(TIME/SEG)%60;
+				MINS=(TIME/(SEG*60))%60;
+				TIMETEXT = String.format("%02d:%02d",MINS,SEGS);
+				opciones.timeLabel.setText(TIMETEXT);
+				if(TIME<SEG) lost();
 			}
 		};
 		gameTimer.scheduleAtFixedRate(gameTime, 0,100);

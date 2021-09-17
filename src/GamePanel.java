@@ -17,7 +17,7 @@ public class GamePanel extends JPanel{
 	public int nPairs;
 	public LinkedList<String> fTarjetas;
 
-	private static int seg = Memorama.seg;
+	private static int seg = Memorama.SEG;
 	private ActionListener listener;
 
 	private static Color cBase = 		new Color(0x0C1E42);
