@@ -1,4 +1,6 @@
 import javax.swing.JToggleButton;
+import javax.swing.border.TitledBorder;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -18,6 +20,8 @@ public class OptionsPanel extends JPanel{
 	// private static Color cContr = 	new Color(0x668F13);
 
 	public JLabel timeLabel;
+	public JLabel nameLabel;
+	public JLabel subjectLabel;
 	public LevelSelector levelSelector;
 	public JButton sButton;
 	public JButton resButton;
@@ -35,6 +39,29 @@ public class OptionsPanel extends JPanel{
 		this.setLayout(null);
 		this.setBackground(cMain);
 
+		// Name Label
+		if(Memorama.userName == null || Memorama.userName.isBlank())
+			Memorama.userName = "Nombre";
+		this.nameLabel = new JLabel(Memorama.userName);
+		this.nameLabel.setFocusable(false);
+		this.nameLabel.setHorizontalAlignment(JLabel.CENTER);
+		this.nameLabel.setVerticalAlignment(JLabel.CENTER);
+		this.nameLabel.setForeground(cMain);
+		this.nameLabel.setOpaque(true);
+		this.nameLabel.setBackground(cBase);
+		this.nameLabel.setFont(optFont);
+		this.nameLabel.setBounds((pannelWidth-200)/2,50,200,80);
+		this.nameLabel.setBorder(
+			BorderFactory.createTitledBorder(
+						BorderFactory.createLineBorder(cMain),
+						"Nombre:",
+						TitledBorder.LEFT,
+						TitledBorder.BELOW_TOP,
+						new Font("Hack",Font.BOLD,16),
+						cMain
+					));
+		this.add(nameLabel);
+
 		// TimeLabel
 		this.timeLabel = new JLabel(timeText);
 		this.timeLabel.setFocusable(false);
@@ -44,14 +71,33 @@ public class OptionsPanel extends JPanel{
 		this.timeLabel.setOpaque(true);
 		this.timeLabel.setForeground(cMain);
 		this.timeLabel.setFont(optFont);
-		this.timeLabel.setBounds((pannelWidth-200)/2,100,200,200);
+		this.timeLabel.setBounds((pannelWidth-200)/2,150,200,200);
 		this.add(timeLabel);
+		
+		// Subject Label
+		this.subjectLabel = new JLabel(Memorama.subject);
+		this.subjectLabel.setFocusable(false);
+		this.subjectLabel.setHorizontalAlignment(JLabel.CENTER);
+		this.subjectLabel.setVerticalAlignment(JLabel.CENTER);
+		this.subjectLabel.setForeground(cBase);
+		this.subjectLabel.setFont(optFont);
+		this.subjectLabel.setBounds((pannelWidth-250)/2, 365, 250, 80);
+		this.subjectLabel.setBorder(
+			BorderFactory.createTitledBorder(
+						BorderFactory.createLineBorder(cBase),
+						"Tema:",
+						TitledBorder.LEFT,
+						TitledBorder.BELOW_TOP,
+						new Font("Hack",Font.BOLD,16),
+						cBase
+					));
+		this.add(subjectLabel);
 
 		// Level Selector
 		this.levelSelector = new LevelSelector(Main.SELECTEDDIR);
 		this.levelSelector.setSelectedIndex(level-1);
 		this.levelSelector.setFocusable(false);
-		this.levelSelector.setBounds((pannelWidth-120)/2, 400, 120, 20);
+		this.levelSelector.setBounds((pannelWidth-120)/2, 460, 120, 20);
 		this.levelSelector.setEnabled(false);
 		this.add(levelSelector);
 
@@ -59,7 +105,7 @@ public class OptionsPanel extends JPanel{
 		this.sButton = new JButton("Inicio");
 		this.sButton.setActionCommand("start");
 		this.sButton.setFocusable(false);
-		this.sButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
+		this.sButton.setBounds((pannelWidth-200)/2, 580, 200, 50);
 		this.sButton.setFont(optFont);
 		this.sButton.addActionListener(listener);
 		this.add(sButton);
@@ -78,7 +124,7 @@ public class OptionsPanel extends JPanel{
 		this.pButton = new JToggleButton("Pausa");
 		this.pButton.setActionCommand("stop");
 		this.pButton.setFocusable(false);
-		this.pButton.setBounds((pannelWidth-200)/2, 600, 200, 50);
+		this.pButton.setBounds((pannelWidth-200)/2, 580, 200, 50);
 		this.pButton.setFont(optFont);
 		this.pButton.setVisible(false);
 		this.pButton.addActionListener(listener);

@@ -59,6 +59,10 @@ public class Memorama extends JFrame implements ActionListener{
 	private static TimerTask gameTime;
 	public static boolean running = false;
 
+	// Save Img 
+  public static String userName;
+	public static String subject;
+
 	public static void main(String[] args){
 		new Memorama().setVisible(true);;
 	}
@@ -159,6 +163,7 @@ public class Memorama extends JFrame implements ActionListener{
 		this.add(juego, BorderLayout.CENTER);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e){
 		String cmd = e.getActionCommand();
 		switch(cmd){
@@ -174,14 +179,17 @@ public class Memorama extends JFrame implements ActionListener{
 			case "start":
 				start();
 				break;
+			case "save":
+				new ImgSaver();
+				break;
 		}
 	}
 
-	public void restart(){
+	private void restart(){
 		gameStateText.setText("Reiniciando...");
 		gameStateText.setVisible(true);
 		gameClock.cancel();
-		LEVEL = opciones.levelSelector.getSelectedLevel();
+		LEVEL = opciones.levelSelector.getSelectedLevel() +1;
 		this.remove(juego);
 		initGame();
 		initTimer();

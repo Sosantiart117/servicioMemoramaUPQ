@@ -1,6 +1,7 @@
 import javax.swing.JComboBox;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class LevelSelector extends JComboBox<String>{
 
@@ -29,7 +30,7 @@ public class LevelSelector extends JComboBox<String>{
 
 	public int getSelectedLevel(){
 		return Arrays.asList(LEVELS).indexOf(
-						this.getSelectedItem().toString()) +1;
+						this.getSelectedItem().toString());
 	}
 
 	public void updateSelection(){
@@ -43,7 +44,14 @@ public class LevelSelector extends JComboBox<String>{
 	}
 	
 	public static String[] getLevels(String levelsDir){
-		return Main.getDirs(levelsDir);
+		// fix, expected 0..2 for levels
+		ArrayList<String> lvls = new ArrayList<String>();
+		for(String x: Main.getDirs(levelsDir))
+			lvls.add(LEVELS[Integer.parseInt(x)]);
+		String[] res = new String[lvls.size()];
+		for(int i = 0; i<lvls.size(); i++)
+			res[i] = (String)lvls.toArray()[lvls.size()-1-i];
+		return res;
 	}
 
 }

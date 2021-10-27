@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -24,6 +25,7 @@ public class Main implements ActionListener{
 	private static LevelSelector lvlSelector ;
 	private static JComboBox<String> dirSelector ;
 	private static Color cBase = 		new Color(0x0C1E42);
+	private boolean isDirSelected = false;
 
 	public static String titleImagePath;
 
@@ -34,6 +36,7 @@ public class Main implements ActionListener{
 		new Main();
 		frame.setVisible(true);
 	}
+
 
 
 	// Pantalla principal
@@ -139,20 +142,32 @@ public class Main implements ActionListener{
 		frame.dispose();
 	}
 
+	private static boolean askName(){
+		// POP up para pedir el nombre
+		Memorama.userName = JOptionPane.showInputDialog("¿Como te llamas?");
+		if(Memorama.userName == null) return false;
+		return true;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource() == dirSelector){
-			SELECTEDDIR = FILESDIR + dirSelector.getSelectedItem().toString();
+			isDirSelected = true;
+			Memorama.subject = dirSelector.getSelectedItem().toString();
+			SELECTEDDIR = FILESDIR + Memorama.subject;
 			lvlSelector.updateSelection(SELECTEDDIR);
 		}
 
 		// If button selected
 		if(e.getSource() == startB){
-			int selectedLevel = lvlSelector.getSelectedLevel();
+			if(! isDirSelected) return;
+			if(! askName()) return;
+			int selectedLevel = lvlSelector.getSelectedLevel() +1;
 
 			FILESDIR +=
 				dirSelector.getSelectedItem().toString() +
 				File.separator + 
-				lvlSelector.getSelectedItem().toString() +
+				lvlSelector.getSelectedLevel()+
 				File.separator;
 
 			startMemorama(selectedLevel,FILESDIR);// start game
