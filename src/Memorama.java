@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -13,6 +14,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -179,9 +181,6 @@ public class Memorama extends JFrame implements ActionListener{
 			case "start":
 				start();
 				break;
-			case "save":
-				new ImgSaver();
-				break;
 		}
 	}
 
@@ -227,7 +226,15 @@ public class Memorama extends JFrame implements ActionListener{
 		opciones.resButton.setEnabled(true);
 	}
 
-	private static void won(){
+	private void won(){
+		int res = JOptionPane.showConfirmDialog(this, "Ganaste!, Deseas tomar captura?");
+		if(res==0)
+			try{
+
+				new ImgSaver(this);
+			}catch(IOException e){
+				JOptionPane.showMessageDialog(this, "Ocurrio un Error al salvar");
+			}
 		running=false;
 		opciones.levelSelector.setEnabled(true);
 		opciones.pButton.setVisible(false);
