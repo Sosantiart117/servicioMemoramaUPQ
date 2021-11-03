@@ -16,7 +16,7 @@ import java.io.File;
 public class Main implements ActionListener{
 
 	public static String PATH = "./";
-	public static String FILESDIR = PATH+"media/img/".replace("/", File.separator);
+	public static String FILESDIR = "media/img/";
 	public static String SELECTEDDIR;
 
 	private static JFrame frame;
@@ -31,6 +31,9 @@ public class Main implements ActionListener{
 
 	public static void main(String args[]){
 		PATH = args.length!=0?args[0]:"./";
+		PATH.replace("/", File.separator);
+		FILESDIR = PATH + FILESDIR;
+		FILESDIR.replace("/", File.separator);
 		titleImagePath = PATH+"media/icons/title.png";
 		titleImagePath.replace("/",File.separator);
 		new Main();
@@ -61,7 +64,7 @@ public class Main implements ActionListener{
 		// técnico 
 		frame.setTitle("Memorama"); //Nombre de la ventana
 		frame.setResizable(false); // tamaño fijo
-		frame.setSize(500,500); // x y 
+		frame.setSize(500,600); // x y 
 		frame.setLocationRelativeTo(null); //aparece en el centro del moitor
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Termina cuando cierre
 		
