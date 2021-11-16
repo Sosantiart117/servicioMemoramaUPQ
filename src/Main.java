@@ -18,8 +18,8 @@ public class Main implements ActionListener{
 	public static String PATH = "./";
 	public static String FILESDIR = "media/img/";
 	public static String SELECTEDDIR;
+	public static JFrame frame;
 
-	private static JFrame frame;
 	private static JLayeredPane base;
 	private static JButton startB;
 	private static LevelSelector lvlSelector ;
@@ -28,14 +28,10 @@ public class Main implements ActionListener{
 	private boolean isDirSelected = false;
 
 	public static String titleImagePath;
+	private static String HOMEPATH;
 
 	public static void main(String args[]){
-		PATH = args.length!=0?args[0]:"./";
-		PATH.replace("/", File.separator);
-		FILESDIR = PATH + FILESDIR;
-		FILESDIR.replace("/", File.separator);
-		titleImagePath = PATH+"media/icons/title.png";
-		titleImagePath.replace("/",File.separator);
+		HOMEPATH = args.length!=0?args[0]:"./";
 		new Main();
 		frame.setVisible(true);
 	}
@@ -44,6 +40,8 @@ public class Main implements ActionListener{
 
 	// Pantalla principal
 	public Main (){
+		// Set correct directory
+		setDir();
 		// Inicia la ventana
 		setFrame();
 		// Inicia el layout para la ventana
@@ -57,6 +55,18 @@ public class Main implements ActionListener{
 		// Botton de inicio
 		this.initSButton();
 
+	}
+
+	private void setDir() {
+		PATH = "./";
+		FILESDIR = "media/img/";
+		PATH=HOMEPATH;
+		PATH.replace("/", File.separator);
+		FILESDIR = PATH + FILESDIR;
+		System.out.println(FILESDIR);
+		FILESDIR.replace("/", File.separator);
+		titleImagePath = PATH+"media/icons/title.png";
+		titleImagePath.replace("/",File.separator);
 	}
 
 	private static void setFrame(){
@@ -174,6 +184,7 @@ public class Main implements ActionListener{
 				File.separator;
 
 			startMemorama(selectedLevel,FILESDIR);// start game
+			frame.dispose();
 		}
 	}
 

@@ -26,6 +26,7 @@ public class OptionsPanel extends JPanel{
 	public JButton sButton;
 	public JButton resButton;
 	public JToggleButton pButton;
+	public JButton bButton;
 	
 	public static Font optFont;
 
@@ -129,6 +130,16 @@ public class OptionsPanel extends JPanel{
 		this.pButton.setVisible(false);
 		this.pButton.addActionListener(listener);
 		this.add(pButton);
+
+		// Pause Button
+		this.bButton = new JButton("<");
+		this.bButton.setActionCommand("back");
+		this.bButton.setFocusable(false);
+		this.bButton.setBounds(25, 25, 50, 50);
+		this.bButton.setFont(optFont);
+		this.bButton.setVisible(true);
+		this.bButton.addActionListener(listener);
+		this.add(bButton);
 	}
 	
 }

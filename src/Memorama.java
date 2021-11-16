@@ -181,6 +181,11 @@ public class Memorama extends JFrame implements ActionListener{
 			case "start":
 				start();
 				break;
+			case "back":
+				stop();
+				this.dispose();
+				new Main().frame.setVisible(true);
+				break;
 		}
 	}
 
