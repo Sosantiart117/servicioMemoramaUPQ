@@ -182,11 +182,19 @@ public class Memorama extends JFrame implements ActionListener{
 				start();
 				break;
 			case "back":
-				stop();
+				fullStop();
 				this.dispose();
 				new Main().frame.setVisible(true);
 				break;
 		}
+	}
+
+	private void fullStop() {
+			gameStateText.setVisible(true);
+			running = false;
+			juego.setVisible(false);
+			gameClock.cancel();
+			gameTime.cancel();
 	}
 
 	private void restart(){

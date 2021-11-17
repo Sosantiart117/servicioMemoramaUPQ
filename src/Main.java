@@ -63,7 +63,6 @@ public class Main implements ActionListener{
 		PATH=HOMEPATH;
 		PATH.replace("/", File.separator);
 		FILESDIR = PATH + FILESDIR;
-		System.out.println(FILESDIR);
 		FILESDIR.replace("/", File.separator);
 		titleImagePath = PATH+"media/icons/title.png";
 		titleImagePath.replace("/",File.separator);
