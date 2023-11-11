@@ -17,7 +17,7 @@ _compile() {
 
 _jar() {
     echo "Jar:"
-    _compile
+    _compile || exit 1
     _verify_img
     cd ./target
     echo $PWD
@@ -26,7 +26,7 @@ _jar() {
 
 _run() {
     echo "Run"
-    _compile
+    _compile || exit 1
     _verify_img
     cd ./target
     java com.memorama.Main
