@@ -36,8 +36,7 @@ public class Memorama extends JFrame implements ActionListener {
 
     // Escoger tarjetas
     // dir preg sirve como master para sacar imagenes
-    public static String LEVELDIR = Main.PATH + "media/img/Matrices/"
-            .replace("/", File.separator);
+    public static String LEVELDIR = "media/img/Matrices";
 
     // global vars for comparation
     private static boolean pressed = false;

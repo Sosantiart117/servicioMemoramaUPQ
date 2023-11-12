@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.nio.file.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,18 +49,12 @@ public class Main implements ActionListener {
     private static String HOMEPATH;
 
     public static void main(String args[]) {
-        // HOMEPATH = args.length!=0?args[0]:"./";
         new Main();
         frame.setVisible(true);
     }
 
     // Pantalla principal
     public Main() {
-        // String[] dirs = getDirs("media/img",1);
-        // System.out.print(String.join("|", dirs));
-        // System.exit(0);
-        // Set correct directory
-        // setDir();
         // Inicia la ventana
         setFrame();
         // Inicia el layout para la ventana
@@ -73,18 +68,6 @@ public class Main implements ActionListener {
         // Botton de inicio
         this.initSButton();
 
-    }
-
-    private void setDir() {
-        PATH = "./";
-        FILESDIR = "media/img/";
-        PATH = HOMEPATH;
-        PATH.replace("/", File.separator);
-        FILESDIR = PATH + FILESDIR;
-        FILESDIR.replace("/", File.separator);
-        titleImagePath = PATH + "media/icons/title.png";
-        titleImagePath = "media/icons/title.png";
-        titleImagePath.replace("/", File.separator);
     }
 
     private static void setFrame() {
@@ -119,7 +102,7 @@ public class Main implements ActionListener {
         AL.setBounds(100, 30, 300, 20);
         frame.add(AL);
         // Inicia el titulo principal
-        ImageIcon tIcon = new ImageIcon(titleImagePath);
+        ImageIcon tIcon = new ImageIcon(classLoader.getResource(titleImagePath));
         // JLabel title = new JLabel("Algebra", JLabel.CENTER);
         JLabel title = new JLabel();
         title.setText("Memorama");
@@ -202,12 +185,7 @@ public class Main implements ActionListener {
             if (!askName())
                 return;
             int selectedLevel = lvlSelector.getSelectedLevel() + 1;
-
-            FILESDIR += dirSelector.getSelectedItem().toString() +
-                    File.separator +
-                    lvlSelector.getSelectedLevel() +
-                    File.separator;
-
+            FILESDIR += dirSelector.getSelectedItem().toString();
             startMemorama(selectedLevel, FILESDIR);// start game
             frame.dispose();
         }
@@ -223,14 +201,15 @@ public class Main implements ActionListener {
         try {
             URI uri = classLoader.getResource(dirName).toURI();
 
+            String[] dirs;
             if ("jar".equals(uri.getScheme())) {
-                return safeWalkJar(dirName, uri, depth);
+                dirs = safeWalkJar(dirName, uri, depth);
             } else {
-                return Files.walk(Paths.get(uri), depth)
-                        .filter(Files::isDirectory)
+                dirs = Files.walk(Paths.get(uri), depth)
                         .map(pathInDirectory -> pathInDirectory.getFileName().toString())
                         .toArray(String[]::new);
             }
+            return Arrays.copyOfRange(dirs, 1, dirs.length);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
@@ -249,7 +228,6 @@ public class Main implements ActionListener {
             synchronized (getLock(uri)) {
                 try (FileSystem fs = getFileSystem(uri)) {
                     return Files.walk(fs.getPath(path), depth)
-                            .filter(Files::isDirectory)
                             .map(pathInJar -> pathInJar.getFileName().toString())
                             .toArray(String[]::new);
                 }

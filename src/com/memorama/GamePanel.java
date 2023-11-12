@@ -51,19 +51,16 @@ public class GamePanel extends JPanel {
 
         // Get a random list form the "Questions" Repo
         // It is expected that answers have the same name as Questions
-        fTarjetas = new LinkedList<String>(
-                Arrays.asList(
-                        new File(imgDir + "preg" + File.separator).list()));
-
+        fTarjetas = new LinkedList<String>(Arrays.asList(Main.getDirs(imgDir + File.separator + "preg")));
         String img;
         LinkedList<Tarjeta> Seleccion = new LinkedList<Tarjeta>();
         // Add cards
         for (int i = 0; i < nPairs; i++) {
             img = getTarjetaImg();
             // Question
-            Seleccion.add(makeTarjeta(i, imgDir + "preg" + File.separator + img));
+            Seleccion.add(makeTarjeta(i, imgDir + File.separator + "preg" + File.separator + img));
             // Answer
-            Seleccion.add(makeTarjeta(i, imgDir + "res" + File.separator + img));
+            Seleccion.add(makeTarjeta(i, imgDir + File.separator + "res" + File.separator + img));
         }
 
         // Randomiza el orden de las tarjetas

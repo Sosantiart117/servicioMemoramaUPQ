@@ -13,14 +13,14 @@ import java.awt.event.ComponentEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Tarjeta extends JToggleButton {
 
     public int id;
     public String bg;
 
-    private static String cubierta = Main.PATH + "media/icons/cubierta.png"
-            .replace("/", File.separator);
+    private static String cubierta = "media/icons/cubierta.png";
     private BufferedImage master;
     private BufferedImage card;
 
@@ -41,16 +41,9 @@ public class Tarjeta extends JToggleButton {
 
         // custom properties
         this.id = id;
+        master = ImageLoader.loadImage(bg);
+        card = ImageLoader.loadImage(cubierta);
 
-        // this.setSelectedIcon(getSizedIcon(bg));
-        // this.setIcon(getSizedIcon(bg));
-        try {
-            master = ImageIO.read(new File(bg));
-            card = ImageIO.read(new File(cubierta));
-        } catch (IOException err) {
-            err.printStackTrace();
-            System.err.println("Foto no cargo");
-        }
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent event) {

@@ -12,12 +12,12 @@ public class LevelSelector extends JComboBox<String> {
 
     LevelSelector() {
         super();
+        this.addItems(LEVELS);
     }
 
     LevelSelector(String dir) {
         this();
         this.selectedDir = dir;
-        this.addItems(getLevels(this.selectedDir));
     }
 
     LevelSelector(String[] levels) {
@@ -30,31 +30,20 @@ public class LevelSelector extends JComboBox<String> {
             this.addItem(item);
         }
     }
-
+    public void updateSelection(String dir) {
+        this.selectedDir = dir;
+    }
     public int getSelectedLevel() {
         return Arrays.asList(LEVELS).indexOf(
                 this.getSelectedItem().toString());
     }
 
-    public void updateSelection() {
-        this.removeAllItems();
-        this.addItems(getLevels(this.selectedDir));
-    }
-
-    public void updateSelection(String dir) {
-        this.selectedDir = dir;
-        this.updateSelection();
-    }
-
-    public static String[] getLevels(String levelsDir) {
-        // fix, expected 0..2 for levels
-        ArrayList<String> lvls = new ArrayList<String>();
-        for (String x : Main.getDirs(levelsDir))
-            lvls.add(LEVELS[Integer.parseInt(x)]);
-        String[] res = new String[lvls.size()];
-        for (int i = 0; i < lvls.size(); i++)
-            res[i] = (String) lvls.toArray()[lvls.size() - 1 - i];
-        return res;
-    }
+    // THis is dunb, we just have 3 levels...
+    //
+    // public void updateSelection() {
+    //     this.removeAllItems();
+    //     this.addItems(getLevels(this.selectedDir));
+    // }
+    //
 
 }

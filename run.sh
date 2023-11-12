@@ -32,28 +32,38 @@ _run() {
     java com.memorama.Main
 }
 
+_run_jar() {
+    echo "Run Jar"
+    [[ -e Memorama.jar ]] && rm -f Memorama.jar
+    _jar
+    cd ..
+    java -jar Memorama.jar
+}
+
 
 _help_message() {
     echo "Usage: $0 [run | jar | compile]"
     echo "  run       : Run the application."
+    echo "  runjar    : Run Application in jar"
     echo "  jar       : Create a JAR file."
     echo "  compile   : Compile the code."
     echo "  help      : Show this help message."
 }
 
 if [ $# -eq 0 ]; then
-    help_message
+    _help_message
     exit 1
 fi
 
 case $1 in
     run) _run ;;
+    runjar) _run_jar ;;
     jar) _jar ;;
     compile) _compile ;;
     help) _help_message ;;
     *)
         echo "Invalid command: $1"
-        help_message
+        _help_message
         exit 1
         ;;
 esac
