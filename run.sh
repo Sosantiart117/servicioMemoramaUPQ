@@ -1,8 +1,44 @@
 #!/bin/bash
+# Edit this
+
+_out_dir="dist"
+_jar_path="$_out_dir/Memorama.jar"
+_media_path="$_out_dir/media"
+
+_jar() {
+    echo "Jar:"
+    _compile || exit 1
+    _verify_img
+    cd ./$_out_dir
+    echo $PWD
+    [[ -e $_jar_path ]] \
+        && jar uvmf manifest.txt Memorama.jar com media \
+        || jar cvmf manifest.txt Memorama.jar com media
+
+    cd ..
+}
+
+_update_modules(){
+    _jar
+    echo "Updating Modules list"
+    jdeps --list-reduced-deps $_jar_path | tr -d ' ' > $_out_dir/modules.txt
+}
+
+_create_jre() {
+    _update_modules
+    echo "Creating JRE"
+    output_directory="$_out_dir/jre"
+    modules=$(cat $_out_dir/modules.txt | tr '\n' ',')
+    [[ -d $output_directory ]] && rm -rf $output_directory
+    jlink \
+        --module-path $(dirname $(dirname $(readlink -f $(which java))))/jmods \
+        --add-modules "$modules" \
+        --output "$output_directory"
+}
 
 _verify_img(){
     echo "Verify images dir"
-    [[ ! -d "target/media" ]] \
+    [[ ! -d $_media_path ]] \
         && echo "Faltan las imagenes \"media/img\" y \"media/icons\"" && exit 1 \
         || echo "Image dir Exists"
 
@@ -11,42 +47,46 @@ _verify_img(){
 _compile() {
     echo "Compile:"
     [[ ! -d "src" ]] && echo "Wrong path" && exit 1
-    javac -d target ./src/com/memorama/* 
+    javac -d $_out_dir ./src/com/memorama/* 
     echo "Finsih Compile"
 }
 
-_jar() {
-    echo "Jar:"
-    _compile || exit 1
-    _verify_img
-    cd ./target
-    echo $PWD
-    jar cvmf ./manifest.txt ../Memorama.jar com media
+
+_exe(){
+    _create_jre
+    # launch4jc $_out_dir/config.xml
+}
+
+_zip(){
+    _exe
+    zip -ra $_out_dir/Memorama.zip $_out_dir/Memorama.exe $_out_dir/jre
 }
 
 _run() {
     echo "Run"
     _compile || exit 1
     _verify_img
-    cd ./target
+    cd ./$_out_dir
     java com.memorama.Main
 }
 
 _run_jar() {
+
     echo "Run Jar"
-    [[ -e Memorama.jar ]] && rm -f Memorama.jar
+    [[ -e $_jar_path ]] && rm -f $_jar_path
     _jar
-    cd ..
-    java -jar Memorama.jar
+    java -jar $_jar_path
 }
 
 
 _help_message() {
     echo "Usage: $0 [run | jar | compile]"
     echo "  run       : Run the application."
-    echo "  runjar    : Run Application in jar"
+    echo "  runjar    : Run Application in jar."
     echo "  jar       : Create a JAR file."
     echo "  compile   : Compile the code."
+    echo "  jre       : Create JRE for the app."
+    echo "  exe       : Create exe (uses launch4j)"
     echo "  help      : Show this help message."
 }
 
@@ -60,6 +100,9 @@ case $1 in
     runjar) _run_jar ;;
     jar) _jar ;;
     compile) _compile ;;
+    jre) _create_jre ;;
+    exe) _exe ;;
+    zip) _zip ;;
     help) _help_message ;;
     *)
         echo "Invalid command: $1"
