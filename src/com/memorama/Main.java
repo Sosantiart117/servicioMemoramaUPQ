@@ -119,6 +119,7 @@ public class Main implements ActionListener {
 
     private void initDirSelector() {
         // Selector de Directorios
+        System.out.println(FILESDIR);
         String[] dirs = getDirs(FILESDIR);
         dirSelector = new JComboBox<String>(dirs);
         dirSelector.setSelectedItem(null);
@@ -185,8 +186,7 @@ public class Main implements ActionListener {
             if (!askName())
                 return;
             int selectedLevel = lvlSelector.getSelectedLevel() + 1;
-            FILESDIR += dirSelector.getSelectedItem().toString();
-            startMemorama(selectedLevel, FILESDIR);// start game
+            startMemorama(selectedLevel, SELECTEDDIR);// start game
             frame.dispose();
         }
     }
