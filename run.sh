@@ -27,7 +27,7 @@ _update_modules(){
 _create_jre() {
     _update_modules
     echo "Creating JRE"
-    output_directory="$_out_dir/jre"
+    output_directory="$_out_dir/JRE"
     modules=$(cat $_out_dir/modules.txt | tr '\n' ',')
     [[ -d $output_directory ]] && rm -rf $output_directory
     jlink \
@@ -53,13 +53,14 @@ _compile() {
 
 
 _exe(){
-    _create_jre
+    [[ -d "$_out_dir/JRE" ]] || _create_jre
+    [[ ! -e "$_jar_path" ]] && _jar
     # launch4jc $_out_dir/config.xml
 }
 
 _zip(){
     _exe
-    zip -ra $_out_dir/Memorama.zip $_out_dir/Memorama.exe $_out_dir/jre
+    zip -r $_out_dir/Memorama.zip $_out_dir/Memorama.exe $_out_dir/JRE
 }
 
 _run() {
